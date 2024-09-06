@@ -18,8 +18,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'last_name',
+        'middle_name',
         'email',
         'password',
+        'is_active',
+        'is_super_admin',
+        'date_of_birth',
     ];
 
     /**
@@ -44,4 +49,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function clients()
+    {
+        return $this->belongsToMany(Client::class)
+            ->using(ClientUser::class)
+            ->withPivot('is_active', 'is_admin')
+            ->as('client_user');
+    }
+
+    public function clientUsers()
+    {
+        return $this->hasMany(ClientUser::class);
+    }
+
+
 }
