@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -94,17 +95,25 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     }
 
 
-    public function clients()
+    /**
+     * is_active and is_admin are pivot columns, accessed by client_user->is_active and client_user->is_admin
+     */
+    public function clients(): BelongsToMany
     {
-        return $this->belongsToMany(Client::class)
-            ->using(ClientUser::class)
-            ->withPivot('is_active', 'is_admin')
+        return $this->belongsToMany(Client::class, 'client_users')
+            // ->using(ClientUser::class)
+            ->withPivot('is_active', 'is_admin', 'created_at')
             ->as('client_user');
     }
 
-    public function clientUsers()
+    public function clientUsers(): HasMany
     {
         return $this->hasMany(ClientUser::class);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return (bool) $this->is_super_admin;
     }
 
 

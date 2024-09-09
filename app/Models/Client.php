@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Client extends Model
 {
@@ -14,11 +16,15 @@ class Client extends Model
         'is_active',
     ];
 
-    public function users()
+    public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)
-            ->using(ClientUser::class)
-            ->withPivot('is_active')
+        return $this->belongsToMany(User::class, 'client_users')
+            ->withPivot('is_active', 'is_admin', 'created_at')
             ->as('client_user');
+    }
+
+    public function clientUsers(): HasMany
+    {
+        return $this->hasMany(ClientUser::class);
     }
 }
