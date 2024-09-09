@@ -13,10 +13,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Collection;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Image\Enums\Fit;
 
-class User extends Authenticatable implements FilamentUser, HasTenants
+
+class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, interactsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -77,6 +82,15 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
         return true;
         // TODO: Implement canAccessPanel() method.
+    }
+
+    // for Spatie/media-library
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this
+            ->addMediaConversion('preview')
+            ->fit(Fit::Contain, 300, 300)
+            ->nonQueued();
     }
 
 
