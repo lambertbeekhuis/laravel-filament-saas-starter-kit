@@ -3,10 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Client;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -69,6 +69,15 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 
     }
 
+
+    /**
+     * For Filament admin panel https://github.com/filamentphp/filament/discussions/7668
+     */
+    public function client(): Collection
+    {
+        return $this->clients()->where('client_id', Filament::getTenant()->id);
+    }
+
     public function getTenants(Panel $panel): Collection
     {
         return $this->clients;
@@ -81,8 +90,17 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
-        // TODO: Implement canAccessPanel() method.
+        switch ($panel->getId()) {
+            case 'admin':
+                if ($tenant_id = request()->route('tenant')) {
+                    $clientUser = ClientUser::query()->where('user_id', $this->id)->where('client_id', $tenant_id)->first();
+                    return ($clientUser && $clientUser->is_admin);
+                }
+                return true; // without tenant specified, you have access to /admin, which will be redirect to something with tenant
+            case 'superadmin':
+                return $this->isSuperAdmin();
+        }
+        return false;
     }
 
     // for Spatie/media-library
@@ -113,7 +131,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 
     public function isSuperAdmin(): bool
     {
-        return (bool) $this->is_super_admin;
+        return (bool)$this->is_super_admin;
     }
 
 
