@@ -73,7 +73,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     /**
      * For Filament admin panel https://github.com/filamentphp/filament/discussions/7668
      */
-    public function client(): Collection
+    public function client(): BelongsToMany
     {
         return $this->clients()->where('client_id', Filament::getTenant()->id);
     }
