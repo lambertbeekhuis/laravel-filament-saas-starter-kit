@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->tenant(Client::class)
-            ->login()
+            ->loginRouteSlug('login') // disable the fileament login page
             ->colors([
                 'primary' => Color::Amber,
             ])

@@ -25,6 +25,7 @@ class SuperadminPanelProvider extends PanelProvider
         return $panel
             ->id('superadmin')
             ->path('superadmin')
+            ->loginRouteSlug('login') // disable the fileament login page
             ->colors([
                 'primary' => Color::Amber,
             ])
