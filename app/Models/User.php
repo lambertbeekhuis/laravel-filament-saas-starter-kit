@@ -129,6 +129,13 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         return $this->hasMany(ClientUser::class);
     }
 
+
+    public function getFullNameAttribute()
+    {
+         return implode(' ', array_filter([$this->name, $this->middle_name, $this->last_name]));
+    }
+
+
     public function isSuperAdmin(): bool
     {
         return (bool)$this->is_super_admin;

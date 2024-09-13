@@ -60,21 +60,18 @@ class UserResource extends Resource
 
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('id')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('last_name')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('full_name')
+                    ->searchable(['name', 'middle_name', 'last_name']),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('is_super_admin')
-                    ->boolean(),
+
                 Tables\Columns\TextColumn::make('date_of_birth')
                     ->date()
                     ->sortable(),
@@ -88,7 +85,11 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('full_name')->query(function (Builder $query, $value) {
+                    $query->where('name', 'like', "%{$value}%")
+                        ->orWhere('middle_name', 'like', "%{$value}%")
+                        ->orWhere('last_name', 'like', "%{$value}%");
+                }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
