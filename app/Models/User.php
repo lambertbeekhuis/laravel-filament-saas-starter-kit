@@ -110,6 +110,12 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->addMediaConversion('preview')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
+
+        $this
+            ->addMediaConversion('thumb')
+            ->fit(Fit::Contain, 100, 100)
+            ->nonQueued();
+
     }
 
 

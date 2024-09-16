@@ -80,13 +80,22 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('profile_photo')
+                    ->collection('profile')
+                    ->conversion('thumb')
+                    ->label('Photo')
+                    // ->thumbnail()
+                    // ->maxWidth('50px')
+                    //->maxHeight('50px')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
-                    ->sortable(),
-
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('date_of_birth')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
