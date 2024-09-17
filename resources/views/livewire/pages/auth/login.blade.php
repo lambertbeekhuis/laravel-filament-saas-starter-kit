@@ -2,6 +2,7 @@
 
 use App\Livewire\Forms\LoginForm;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
@@ -19,6 +20,32 @@ new #[Layout('layouts.guest')] class extends Component
         $this->form->authenticate();
 
         Session::regenerate();
+
+        // added
+        $user = auth()->user();
+        // check for active user
+        if (!$user->is_active) {
+            auth()->logout();
+            throw ValidationException::withMessages([
+                'form.email' => trans('User is not active '. $user->email), // was 'auth.failed'
+            ]);
+            // add a message, but how ??
+            $this->redirectIntended(route('login', absolute: false));
+        }
+        // check for clientUser
+        if ($clientUserLast = $user->clientUsersLastLogin(null)->first()) {
+            $clientUserLast->update(['last_login_at' => now()]);
+            $this->redirectIntended(default: route('dashboard', parameters: ['tenant' => $clientUserLast->client_id], absolute: false), navigate: true);
+        } else {
+            throw ValidationException::withMessages([
+                'form.email' => trans('No active Tenant/Client found for user: '. $user->email), // was 'auth.failed'
+            ]);
+
+            // do not know if this works within Livewire
+            abort(403);
+        }
+
+        // end added
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }

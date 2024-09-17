@@ -22,6 +22,15 @@ class TestController extends Controller
         }
 
         switch ($type) {
+            case 'clientUser':
+                $clientUserLast = $user->clientUsersLastLogin()->first();
+
+                return view('welcome', compact('clientUserLast'));
+
+
+
+                break;
+
             case 'client':
                 $user = User::find(1);
                 //$clientUsers1 = $user->clientUsers;

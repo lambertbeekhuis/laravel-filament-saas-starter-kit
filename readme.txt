@@ -1,15 +1,12 @@
 TODO:
 - Add registration of new Tenant/Client @superadmin
-
-- login and select last Tenant/Client
 - SaasAuth maken? Sla ik de Tenant op in de sessie? Ja!
-- Switchen naar ander User maken
-
-
-
+- Switchen naar een ander User maken
 
 
 DONE
+- Login and select last Tenant/Client
+- Added debugbar
 - Profile photo for user
 - Access restrictions to Admin and SuperAdmin
 - add Sentry

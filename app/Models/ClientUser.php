@@ -14,6 +14,7 @@ class ClientUser extends Model
     protected $fillable = [
         'client_id',
         'user_id',
+        'last_login_at',
         'is_active',
         'is_admin',
     ];

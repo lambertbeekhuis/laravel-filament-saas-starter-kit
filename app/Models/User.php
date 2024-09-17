@@ -50,6 +50,8 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         'remember_token',
     ];
 
+    protected $tenant = null;
+
     /**
      * Get the attributes that should be cast.
      *
@@ -126,9 +128,42 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     {
         return $this->belongsToMany(Client::class, 'client_users')
             // ->using(ClientUser::class)
-            ->withPivot('is_active', 'is_admin', 'created_at')
+            ->withPivot('is_active', 'is_admin', 'last_login_at', 'created_at')
             ->as('client_user');
     }
+
+    public function clientsLastLogin(?int $tenant_id = null): BelongsToMany
+    {
+        return $this->clients()
+            ->where('client_users.is_active', true)
+            ->where('clients.is_active', true)
+            ->when($tenant_id, function ($query, $tenant_id) {
+                $query->where('clients.id', $tenant_id);
+            })
+            ->orderBy('last_login_at', 'desc');
+    }
+
+    public function clientUsersLastLogin(?int $tenant_id): HasMany
+    {
+        return $this->clientUsers()
+            ->join('clients', 'client_users.client_id', '=', 'clients.id')
+            ->where('clients.is_active', true)
+            ->where('client_users.is_active', true)
+            ->when($tenant_id, function ($query, $tenant_id) {
+                $query->where('client_users.client_id', $tenant_id);
+            })
+            ->orderBy('last_login_at', 'desc');
+    }
+
+
+    /**
+     * This should not be here, but in Auth or something, but it's here for now
+     */
+    public function getClientFromSession(): ?Client
+    {
+        return $this->clientsLastLogin(session('tenant', null))->first();
+    }
+
 
     public function clientUsers(): HasMany
     {
