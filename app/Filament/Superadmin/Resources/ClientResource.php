@@ -40,6 +40,9 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('country')
                     ->maxLength(255)
                     ->default(null),
+                Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
+                    ->collection('logo')
+                    ->image(),
             ]);
     }
 
@@ -51,6 +54,14 @@ class ClientResource extends Resource
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')
+                    ->collection('logo')
+                    ->conversion('thumb')
+                    ->label('Logo')
+                    // ->thumbnail()
+                    // ->maxWidth('50px')
+                    //->maxHeight('50px')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('address')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('zip')
