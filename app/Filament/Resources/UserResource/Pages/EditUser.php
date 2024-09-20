@@ -31,11 +31,12 @@ class EditUser extends EditRecord
             $this->getSaveFormAction(),
             $this->getCancelFormAction(),
             Actions\Action::make('invite')
-                ->hidden(fn () => !$this->record->id || (false && !$this->record->email_verified_at))
+                ->hidden(fn () => !$this->record->id || (!auth()->user()->isSuperAdmin() && !$this->record->email_verified_at))
                 ->label('(Re)Send Invitation')
                 ->action('sendInvitation')
                 ->keyBindings(['mod+shift+s'])
-                ->color('gray'),
+                //->color('gray')
+            ,
         ];
     }
 
