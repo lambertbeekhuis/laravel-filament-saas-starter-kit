@@ -83,11 +83,10 @@ class UserResource extends Resource
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('profile_photo')
                     ->collection('profile')
                     ->conversion('thumb')
-                    ->label('Photo')
+                    ->label('Photo'),
                     // ->thumbnail()
                     // ->maxWidth('50px')
                     //->maxHeight('50px')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable()

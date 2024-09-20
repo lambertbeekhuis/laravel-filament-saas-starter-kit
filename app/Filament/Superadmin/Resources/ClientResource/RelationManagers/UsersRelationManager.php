@@ -71,11 +71,10 @@ class UsersRelationManager extends RelationManager
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('profile_photo')
                     ->collection('profile')
                     ->conversion('thumb')
-                    ->label('Photo')
+                    ->label('Photo'),
                     // ->thumbnail()
                     // ->maxWidth('50px')
-                    //->maxHeight('50px')
-                    ->searchable(),
+                    //->maxHeight('50px'),
                 Tables\Columns\IconColumn::make('client_user.is_active')
                     ->label('Active')
                     ->boolean(),
