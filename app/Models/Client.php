@@ -23,7 +23,7 @@ class Client extends Model implements HasMedia
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'client_users')
-            ->withPivot('is_active', 'is_admin', 'created_at')
+            ->withPivot('is_active', 'is_admin', 'last_login_at', 'created_at')
             ->as('client_user');
     }
 
