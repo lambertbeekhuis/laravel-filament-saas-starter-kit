@@ -7,6 +7,8 @@ use App\Models\ClientUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
 
 class TestController extends Controller
 {
@@ -22,10 +24,13 @@ class TestController extends Controller
         }
 
         switch ($type) {
+            case 'mail':
+                Mail::to($user->email)->send(new TestMail());
+                return view('welcome');
             case 'clientUser':
                 $clientUserLast = $user->clientUsersLastLogin()->first();
 
-                return view('welcome', compact('clientUserLast'));
+                return view('welcome');
 
 
 
@@ -49,7 +54,6 @@ class TestController extends Controller
             default:
                 $result = 'type not found';
         }
-
 
         return response()->json([
             'type' => $type,
