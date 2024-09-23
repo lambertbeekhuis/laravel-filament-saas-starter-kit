@@ -2,6 +2,9 @@
 
 namespace App\Filament\Superadmin\Resources\ClientResource\RelationManagers;
 
+use App\Models\Client;
+use App\Models\ClientUser;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -9,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\SentInvitationToUserNotification;
 
 class UsersRelationManager extends RelationManager
 {
@@ -16,8 +21,12 @@ class UsersRelationManager extends RelationManager
 
     public function form(Form $form): Form
     {
+
+
         return $form
             ->schema([
+                Forms\Components\Hidden::make('client_id')
+                    ->default($this->getOwnerRecord()->id), // used for sending email
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -35,11 +44,7 @@ class UsersRelationManager extends RelationManager
                 Forms\Components\SpatieMediaLibraryFileUpload::make('profile_photo')
                     ->collection('profile')
                     // ->rules(['required'])
-                    ->image()
-                //->fit(Fit::contain())
-                //->prunable()
-                //->preview()
-                ,
+                    ->image(),
 
                 /*
                 Forms\Components\TextInput::make('password')
@@ -50,6 +55,10 @@ class UsersRelationManager extends RelationManager
 
                 Forms\Components\DatePicker::make('date_of_birth'),
 
+                Forms\Components\Toggle::make('sent_invitation')
+                    ->label('Send invitation email')
+                    // might be made hidden of already logged in once
+                    ->default(false),
                 /*
                 Forms\Components\Toggle::make('client_user.is_active'),
 
@@ -94,6 +103,14 @@ class UsersRelationManager extends RelationManager
                         $data['password'] = 'to be generated';
                         return $data;
                     })
+                    ->using(function ($record, array $data) {
+                        $user = User::create($data);
+                        $clientUser = ClientUser::create(['client_id' => $data['client_id'], 'user_id' => $user->id]);
+                        if ($data['sent_invitation'] ?? false) {
+                            Notification::send($user, new SentInvitationToUserNotification($user, Client::find($data['client_id'])));
+                        }
+                        return $user;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -102,6 +119,13 @@ class UsersRelationManager extends RelationManager
                     })
                     ->mutateFormDataUsing(function (array $data): array {
                         return $data;
+                    })
+                    ->using(function ($record, array $data) {
+                        $record->update($data);
+                        if ($data['sent_invitation'] ?? false) {
+                            Notification::send($record, new SentInvitationToUserNotification($record, Client::find($data['client_id'])));
+                        }
+                        return $record;
                     }),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -111,7 +135,4 @@ class UsersRelationManager extends RelationManager
                 ]),
             ]);
     }
-
-
-
 }

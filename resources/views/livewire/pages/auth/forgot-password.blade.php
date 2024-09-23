@@ -8,6 +8,13 @@ new #[Layout('layouts.guest')] class extends Component
 {
     public string $email = '';
 
+    // retrieve prefilled email from request (if available)
+    public function __construct()
+    {
+        parent::__construct();
+        $this->email = request()->get('email', '');
+    }
+
     /**
      * Send a password reset link to the provided email address.
      */
