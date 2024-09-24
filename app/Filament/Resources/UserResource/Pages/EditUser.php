@@ -5,11 +5,15 @@ namespace App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource;
 use App\Mail\InviteUserToClientMail;
 use App\Mail\TestMail;
+use App\Models\Client;
+use App\Notifications\SentInvitationToUserNotification;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class EditUser extends EditRecord
 {
@@ -23,6 +27,17 @@ class EditUser extends EditRecord
     }
 
 
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        $record =  parent::handleRecordUpdate($record, $data);
+
+        if ($data['sent_invitation'] ?? false) {
+            $client = Filament::getTenant();
+            Notification::send($record, new SentInvitationToUserNotification($record, $client));
+        }
+
+        return $record;
+    }
 
     // https://github.com/filamentphp/filament/discussions/285
     protected function getFormActions(): array
@@ -30,6 +45,8 @@ class EditUser extends EditRecord
         return [
             $this->getSaveFormAction(),
             $this->getCancelFormAction(),
+            /*
+             * Deprecated, used an in-form switch instead
             Actions\Action::make('invite')
                 ->hidden(fn () => !$this->record->id || (!auth()->user()->isSuperAdmin() && !$this->record->email_verified_at))
                 ->label('(Re)Send Invitation')
@@ -37,17 +54,19 @@ class EditUser extends EditRecord
                 ->keyBindings(['mod+shift+s'])
                 //->color('gray')
             ,
+            */
         ];
     }
 
+    /**
+     * @deprecated
+     */
     public function sendInvitation(): void
     {
         $user = $this->record;
         $client = Filament::getTenant();
         $result = Mail::to($user->email)
             ->send(new InviteUserToClientMail($user, $client));
-
-
 
     }
 

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
+use App\Notifications\SentInvitationToUserNotification;
 
 class TestController extends Controller
 {
@@ -24,6 +25,12 @@ class TestController extends Controller
         }
 
         switch ($type) {
+            case 'notification':
+                // sent email with (breeze) template https://laraveldaily.com/post/laravel-breeze-user-name-auth-email-templates
+                $user = User::find(1);
+                $client = Client::find(1);
+                $user->notify(new SentInvitationToUserNotification($user, $client));
+                return view('welcome');
             case 'mail':
                 Mail::to($user->email)->send(new TestMail());
                 return view('welcome');

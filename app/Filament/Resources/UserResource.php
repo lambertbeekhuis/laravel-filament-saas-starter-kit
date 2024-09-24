@@ -44,24 +44,16 @@ class UserResource extends Resource
                 Forms\Components\SpatieMediaLibraryFileUpload::make('profile_photo')
                     ->collection('profile')
                     // ->rules(['required'])
-                    ->image()
-                    //->fit(Fit::contain())
-                    //->prunable()
-                    //->preview()
-                    ,
-
-                /*
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
-                */
+                    ->image(),
 
                 Forms\Components\DatePicker::make('date_of_birth'),
 
                 Forms\Components\Toggle::make('is_active'),
 
-
+                Forms\Components\Toggle::make('sent_invitation')
+                    ->label('Send invitation email')
+                    // might be made hidden of already logged in once
+                    ->default(false),
             ]);
     }
 
