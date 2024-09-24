@@ -1,4 +1,5 @@
 TODO:
+- php artisan command for making a new User
 - Superadmin: Add Users (basically to search!)
 - Combine all users-stuff
 - SaasAuth maken? Sla ik de Tenant op in de sessie? Ja!
