@@ -64,11 +64,19 @@ class UserResource extends Resource
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('client')
+                    ->label('Clients')
+                    ->html()
                     ->getStateUsing( function (User $record) {
-                        $clientsArray = $record->clients->pluck('name')->toArray();
-                        return implode(', ', $clientsArray);
-                    })
-                    ->label('Clients'),
+                        $html = '';
+                        foreach ($record->clients as $client) {
+                            $html .= sprintf('<div class="badge badge-primary"><a href="%s">%s</a?</div>',
+                                route('filament.superadmin.resources.clients.edit', ['record' => $client->id]),
+                                $client->name
+                            );
+                        }
+                        return $html;
+                    }),
+
                 Tables\Columns\IconColumn::make('is_super_admin')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
