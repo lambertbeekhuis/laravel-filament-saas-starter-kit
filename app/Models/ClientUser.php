@@ -15,8 +15,8 @@ class ClientUser extends Model
         'client_id',
         'user_id',
         'last_login_at',
-        'is_active',
-        'is_admin',
+        'is_active_on_client',
+        'is_admin_on_client',
     ];
 
     public function client()
@@ -28,4 +28,13 @@ class ClientUser extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public static function findForUserAndClient($userId, $clientId)
+    {
+        return static::where('user_id', $userId)
+            ->where('client_id', $clientId)
+            ->first();
+    }
+
+
 }

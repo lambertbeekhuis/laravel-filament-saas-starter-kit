@@ -71,7 +71,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 
     }
 
-
     /**
      * For Filament admin panel https://github.com/filamentphp/filament/discussions/7668
      */
@@ -95,8 +94,13 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         switch ($panel->getId()) {
             case 'admin':
                 if ($tenant_id = request()->route('tenant')) {
-                    $clientUser = ClientUser::query()->where('user_id', $this->id)->where('client_id', $tenant_id)->first();
-                    return ($clientUser && $clientUser->is_admin);
+                    $clientUser = ClientUser::query()
+                        ->where('user_id', $this->id)
+                        ->where('client_id', $tenant_id)
+                        ->where('is_active_on_client', true)
+                        ->where('is_admin_on_client', true)
+                        ->first();
+                    return (boolean) $clientUser;
                 }
                 return true; // without tenant specified, you have access to /admin, which will be redirect to something with tenant
             case 'superadmin':
@@ -122,20 +126,25 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 
 
     /**
-     * is_active and is_admin are pivot columns, accessed by client_user->is_active and client_user->is_admin
+     * is_active and is_admin are pivot columns, accessed by client_user->is_active_on_client and client_user->is_admin_on_client
      */
     public function clients(): BelongsToMany
     {
         return $this->belongsToMany(Client::class, 'client_users')
             // ->using(ClientUser::class)
-            ->withPivot('is_active', 'is_admin', 'last_login_at', 'created_at')
+            ->withPivot('is_active_on_client', 'is_admin_on_client', 'last_login_at', 'created_at')
             ->as('client_user');
+    }
+
+    public function clientUsers(): HasMany
+    {
+        return $this->hasMany(ClientUser::class);
     }
 
     public function clientsLastLogin(?int $tenant_id = null): BelongsToMany
     {
         return $this->clients()
-            ->where('client_users.is_active', true)
+            ->where('client_users.is_active_on_client', true)
             ->where('clients.is_active', true)
             ->when($tenant_id, function ($query, $tenant_id) {
                 $query->where('clients.id', $tenant_id);
@@ -148,7 +157,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         return $this->clientUsers()
             ->join('clients', 'client_users.client_id', '=', 'clients.id')
             ->where('clients.is_active', true)
-            ->where('client_users.is_active', true)
+            ->where('client_users.is_active_on_client', true)
             ->when($tenant_id, function ($query, $tenant_id) {
                 $query->where('client_users.client_id', $tenant_id);
             })
@@ -162,12 +171,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     public function getClientFromSession(): ?Client
     {
         return $this->clientsLastLogin(session('tenant', null))->first();
-    }
-
-
-    public function clientUsers(): HasMany
-    {
-        return $this->hasMany(ClientUser::class);
     }
 
 

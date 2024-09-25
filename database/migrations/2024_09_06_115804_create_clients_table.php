@@ -28,8 +28,8 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->dateTime('last_login_at')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->boolean('is_admin')->default(false);
+            $table->boolean('is_active_on_client')->default(true);
+            $table->boolean('is_admin_on_client')->default(false);
             $table->timestamps();
         });
 

@@ -84,11 +84,11 @@ class UsersRelationManager extends RelationManager
                     // ->thumbnail()
                     // ->maxWidth('50px')
                     //->maxHeight('50px'),
-                Tables\Columns\IconColumn::make('client_user.is_active')
-                    ->label('Active')
+                Tables\Columns\IconColumn::make('client_user.is_active_on_client')
+                    ->label('Active on client')
                     ->boolean(),
-                Tables\Columns\IconColumn::make('client_user.is_admin')
-                    ->label('Admin')
+                Tables\Columns\IconColumn::make('client_user.is_admin_on_client')
+                    ->label('ClientAdmin')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('client_user.last_login_at')
                     ->label('Last login'),
