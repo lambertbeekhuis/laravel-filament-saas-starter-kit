@@ -31,6 +31,7 @@ return new class extends Migration
             $table->boolean('is_active_on_client')->default(true);
             $table->boolean('is_admin_on_client')->default(false);
             $table->timestamps();
+            $table->unique(['client_id', 'user_id']);
         });
 
     }
