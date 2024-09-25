@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 class ClientUser extends Model
 {
     use HasFactory;
@@ -36,5 +37,13 @@ class ClientUser extends Model
             ->first();
     }
 
+    /**
+     * Update-query, without retrieving the model first
+     * Does not update the updated_at column field either
+     */
+    public static function updateLastLoginForUserAndClient(int $userId, int $clientId): void
+    {
+        DB::update("UPDATE client_users SET last_login_at = NOW() WHERE user_id = ? AND client_id = ?", [$userId, $clientId]);
+    }
 
 }

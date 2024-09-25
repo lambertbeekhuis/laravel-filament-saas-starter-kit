@@ -16,20 +16,22 @@ class SecureTenantMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $tenant_id = $request->get('tenant', session('tenant', null));
+        // get tenant_id from request or from session
+        $tenant_id_session = session('tenant', null);
+        $tenant_id = $request->get('tenant', $tenant_id_session);
 
         $user = $request->user();
 
+        // get this client, or the last logged-in client
         if (!$client = $user->clientsLastLogin($tenant_id)->first()) {
             abort(403);
         }
 
-        // Kind of exeption: if for some reason tenant_id is not set, set it to the last client
-        if (!$tenant_id) {
-            if ($clientUserLast = $user->clientUsersLastLogin(null)->first()) {
-                $clientUserLast->update(['last_login_at' => now()]);
-                session(['tenant' => $client->id]);
-            }
+        // if tenant_id is not in session, update session and set last login
+        if (!$tenant_id_session) {
+            $client_id = $client->client_user->client_id;
+            ClientUser::updateLastLoginForUserAndClient($user->id, $client_id);
+            session(['tenant' => $client->id]);
         }
 
         // inject into request

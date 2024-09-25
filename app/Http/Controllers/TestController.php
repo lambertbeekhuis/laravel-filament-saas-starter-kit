@@ -25,6 +25,12 @@ class TestController extends Controller
         }
 
         switch ($type) {
+            case 'lastlogin':
+                $client = $user->clientsLastLogin()->first();
+                $client_id = $client->client_user->client_id;
+                ClientUser::updateLastLoginForUserAndClient($user->id, $client_id);
+
+                return view('welcome');
             case 'notification':
                 // sent email with (breeze) template https://laraveldaily.com/post/laravel-breeze-user-name-auth-email-templates
                 $user = User::find(1);
