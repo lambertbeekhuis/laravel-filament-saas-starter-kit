@@ -46,11 +46,15 @@ class TestController extends Controller
             case 'client':
                 $user = User::find(1);
                 //$clientUsers1 = $user->clientUsers;
-                $clientUsers = ClientUser::all();
+                //$clientUsers = ClientUser::all();
                 $clients = $user->clients;
-                // $clients = Client::all();
+                $clientFirst = $clients->first();
+                $clientUserData = $clientFirst->client_user;
 
-                dd($clientUsers, $clients);
+                $clientUserIsActive = $clientUserData->is_active_on_client;
+                $clientUserIsAdmin = $clientUserData->is_admin_on_client;
+
+                dd($clients, $clientUserData, $clientUserIsAdmin, $clientUserIsActive);
 
 
 

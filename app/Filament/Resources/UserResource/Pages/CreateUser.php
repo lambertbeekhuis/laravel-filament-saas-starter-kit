@@ -16,6 +16,7 @@ class CreateUser extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
+        $data['password'] = 'to be generated';
         $record = parent::handleRecordCreation($data);
 
         if ($data['sent_invitation'] ?? false) {

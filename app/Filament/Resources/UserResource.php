@@ -22,6 +22,16 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery()
+            ->with('clients')
+            ->where('users.is_active', true);
+
+        return $query;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -49,10 +59,12 @@ class UserResource extends Resource
 
                 // Forms\Components\Toggle::make('is_active'),
 
+                // data set by mutateFormDataBeforeFill
                 Forms\Components\Toggle::make('is_active_on_client')
                     ->label('Access to client')
                     ->hiddenOn('create'),
 
+                // data set by mutateFormDataBeforeFill
                 Forms\Components\Toggle::make('is_admin_on_client')
                     ->label('ClientAdmin')
                     ->hiddenOn('create'),
@@ -74,20 +86,22 @@ class UserResource extends Resource
                     ->searchable(['name', 'middle_name', 'last_name']),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
+                /*
+                 * only users.is_active = true
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
-
-                /*
-                Tables\Columns\IconColumn::make('is_active_on_client')
-                    ->boolean()
-                    ->formatStateUsing(function ($value) {
-                        return $value ? 'success' : 'danger';
-                    })
-                    ->label('Active on client'),
-                Tables\Columns\IconColumn::make('is_admin_on_client')
-                    ->boolean()
-                    ->label('ClientAdmin'),
                 */
+
+                Tables\Columns\TextColumn::make('client_user_pivot.last_login_at')
+                    ->label('Last login'),
+
+                Tables\Columns\IconColumn::make('client_user_pivot.is_active_on_client')
+                    ->label('Active')
+                    ->boolean(),
+
+                Tables\Columns\IconColumn::make('client_user_pivot.is_admin_on_client')
+                    ->label('Admin')
+                    ->boolean(),
 
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('profile_photo')
                     ->collection('profile')

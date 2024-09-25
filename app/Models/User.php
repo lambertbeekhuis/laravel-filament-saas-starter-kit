@@ -136,6 +136,16 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->as('client_user');
     }
 
+    /**
+     * Access pivot columns as retrieved by above clients() relationship
+     * Can be used in e.g. Filament
+     */
+    public function getClientUserPivotAttribute()
+    {
+        return $this->clients->first()->client_user;
+    }
+
+
     public function clientUsers(): HasMany
     {
         return $this->hasMany(ClientUser::class);

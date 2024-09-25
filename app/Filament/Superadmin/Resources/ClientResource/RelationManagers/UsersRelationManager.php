@@ -100,10 +100,10 @@ class UsersRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->mutateFormDataUsing(function (array $data): array {
-                        $data['password'] = 'to be generated';
                         return $data;
                     })
                     ->using(function ($record, array $data) {
+                        $data['password'] = 'to be generated';
                         $user = User::create($data);
                         $clientUser = ClientUser::create(['client_id' => $data['client_id'], 'user_id' => $user->id]);
                         if ($data['sent_invitation'] ?? false) {

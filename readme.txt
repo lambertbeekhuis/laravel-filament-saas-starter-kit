@@ -1,14 +1,16 @@
 TODO:
 - php artisan command for making a new User
-- Superadmin: Add Users (basically to search!)
+
 - Combine all users-stuff
 - SaasAuth maken? Sla ik de Tenant op in de sessie? Ja!
 - Switchen naar een ander User maken
 
 - Superadmin: client->users active and admin editable maken
-- Admin: is_admin_on_client and is_active_on_client toevoegen
+
 
 DONE
+- Superadmin: Add Users (basically to search!)
+- Admin: is_admin_on_client and is_active_on_client toevoegen
 - ClientUser: is_admin => is_client_admin
 - ClientUser: is_active => is_client_active
 - Superadmin: client edit users: doe iets met wel/niet email sturen
