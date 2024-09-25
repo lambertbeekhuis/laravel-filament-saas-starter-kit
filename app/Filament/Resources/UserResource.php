@@ -24,9 +24,6 @@ class UserResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $tenant = Filament::getTenant();
-        $clientUser = ClientUser::findForUserAndClient(Auth::user()->id, $tenant->id);
-
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
@@ -52,6 +49,14 @@ class UserResource extends Resource
 
                 // Forms\Components\Toggle::make('is_active'),
 
+                Forms\Components\Toggle::make('is_active_on_client')
+                    ->label('Access to client')
+                    ->hiddenOn('create'),
+
+                Forms\Components\Toggle::make('is_admin_on_client')
+                    ->label('ClientAdmin')
+                    ->hiddenOn('create'),
+
                 Forms\Components\Toggle::make('sent_invitation')
                     ->label('Send invitation email')
                     // might be made hidden of already logged in once
@@ -61,9 +66,6 @@ class UserResource extends Resource
 
     public static function table(Table $table): Table
     {
-        $tenant = Filament::getTenant();
-
-
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
@@ -72,8 +74,21 @@ class UserResource extends Resource
                     ->searchable(['name', 'middle_name', 'last_name']),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                //Tables\Columns\IconColumn::make('is_active')
-                //    ->boolean(),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean(),
+
+                /*
+                Tables\Columns\IconColumn::make('is_active_on_client')
+                    ->boolean()
+                    ->formatStateUsing(function ($value) {
+                        return $value ? 'success' : 'danger';
+                    })
+                    ->label('Active on client'),
+                Tables\Columns\IconColumn::make('is_admin_on_client')
+                    ->boolean()
+                    ->label('ClientAdmin'),
+                */
+
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('profile_photo')
                     ->collection('profile')
                     ->conversion('thumb')

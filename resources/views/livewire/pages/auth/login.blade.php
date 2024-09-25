@@ -44,8 +44,7 @@ new #[Layout('layouts.guest')] class extends Component
             // do not know if this works within Livewire
             abort(403);
         }
-
-        // end added
+        // end added for Saas
 
         $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }

@@ -6,7 +6,7 @@ TODO:
 - Switchen naar een ander User maken
 
 - Superadmin: client->users active and admin editable maken
-- Admin: de active moet niet op users, maar op client_users staan
+- Admin: is_admin_on_client and is_active_on_client toevoegen
 
 DONE
 - ClientUser: is_admin => is_client_admin
