@@ -175,6 +175,20 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     }
 
 
+    public static function getUsersForClient(int $client_id): Collection
+    {
+        return User::query()
+            ->join('client_users', 'users.id', '=', 'client_users.user_id')
+            ->where('client_users.client_id', $client_id)
+            ->where('client_users.is_active_on_client', true)
+            ->where('users.is_active', true)
+            ->addSelect('users.*')
+            ->addSelect('client_users.is_admin_on_client')
+            ->addSelect('client_users.last_login_at')
+            ->get();
+    }
+
+
     /**
      * This should not be here, but in Auth or something, but it's here for now
      */

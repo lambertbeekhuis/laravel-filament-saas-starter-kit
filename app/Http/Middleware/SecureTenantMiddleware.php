@@ -35,7 +35,7 @@ class SecureTenantMiddleware
         }
 
         // inject into request
-        $request->tenant = $client;
+        $request->client = $client;
 
         return $next($request);
     }

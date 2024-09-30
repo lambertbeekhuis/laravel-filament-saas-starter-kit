@@ -3,10 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Middleware\SecureTenantMiddleware;
+use App\Http\Controllers\AppController;
 
 Route::view('/', 'welcome');
 
-Route::view('dashboard/{tenant?}', 'dashboard')
+Route::get('dashboard/{tenant?}', [AppController::class, 'dashboard'])
     ->middleware(['auth', 'verified', SecureTenantMiddleware::class])
     ->name('dashboard');
 
