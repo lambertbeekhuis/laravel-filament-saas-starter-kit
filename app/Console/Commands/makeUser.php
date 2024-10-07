@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\ClientUser;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\Facades\Hash;
 
 class makeUser extends Command implements PromptsForMissingInput
 {
@@ -15,14 +16,14 @@ class makeUser extends Command implements PromptsForMissingInput
      *
      * @var string
      */
-    protected $signature = 'app:make-user {email : login email of the user} {name : (first)name of the user} {clientName : company name of the user (=tenantName}  {--clientAdmin : is the user a ClientAdmin }  {--superAdmin : is the user a superAdmin}';
+    protected $signature = 'app:make-user {email : login email of the user} {name : (first)name of the user} {password : password}  {clientName : company name of the user (=tenantName}  {--clientAdmin : is the user a ClientAdmin }  {--superAdmin : is the user a superAdmin}';
 
     /*
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Make a new User and Client for the SaasSetup';
+    protected $description = 'Make a new User and Client for the SaasSetup app:make-user {email} {name} {password} {clientName} {--clientAdmin} {--superAdmin}';
 
     /**
      * Execute the console command.
@@ -32,15 +33,18 @@ class makeUser extends Command implements PromptsForMissingInput
         $email = $this->argument('email');
         $name = $this->argument('name');
         $clientName = $this->argument('clientName');
+        $password = $this->argument('password');
         $isSuperAdmin = (bool) $this->option('superAdmin') ?? false;
         $isClientAdmin = (bool) $this->option('clientAdmin') ?? false;
+
+        dd($password);
 
         $user = User::where('email', $email)->first();
         if (!$user) {
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
-                'password' => bcrypt('password'),
+                'password' => Hash::make($password),
                 'is_super_admin' => $isSuperAdmin,
             ]);
             echo sprintf("User %s created\n", $email);
