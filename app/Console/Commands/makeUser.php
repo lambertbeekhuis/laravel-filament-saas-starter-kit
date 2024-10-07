@@ -37,8 +37,6 @@ class makeUser extends Command implements PromptsForMissingInput
         $isSuperAdmin = (bool) $this->option('superAdmin') ?? false;
         $isClientAdmin = (bool) $this->option('clientAdmin') ?? false;
 
-        dd($password);
-
         $user = User::where('email', $email)->first();
         if (!$user) {
             $user = User::create([
