@@ -30,7 +30,7 @@ class ClientUser extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function findForUserAndClient($userId, $clientId)
+    public static function findOneForUserAndClient($userId, $clientId)
     {
         return static::where('user_id', $userId)
             ->where('client_id', $clientId)

@@ -34,7 +34,7 @@ class EditUser extends EditRecord
         $tenant = Filament::getTenant();
         $record = $this->record;
 
-        $clientUser = ClientUser::findForUserAndClient($this->record->id, $tenant->id);
+        $clientUser = ClientUser::findOneForUserAndClient($this->record->id, $tenant->id);
         $data['is_active_on_client'] = $clientUser->is_active_on_client;
         $data['is_admin_on_client'] = $clientUser->is_admin_on_client;
         return $data;
@@ -46,7 +46,7 @@ class EditUser extends EditRecord
         $record =  parent::handleRecordUpdate($record, $data);
 
         $tenant = Filament::getTenant();
-        $clientUser = ClientUser::findForUserAndClient($this->record->id, $tenant->id);
+        $clientUser = ClientUser::findOneForUserAndClient($this->record->id, $tenant->id);
         $clientUser->update([
             'is_active_on_client' => $data['is_active_on_client'],
             'is_admin_on_client' => $data['is_admin_on_client'],
