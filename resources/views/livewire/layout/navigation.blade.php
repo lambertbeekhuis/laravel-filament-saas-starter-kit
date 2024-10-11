@@ -35,18 +35,6 @@ new class extends Component
                     </x-nav-link>
                 </div>
 
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('filament.admin.tenant')" wire:navigate>
-                        {{ __('Admin') }}
-                    </x-nav-link>
-                </div>
-
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('filament.superadmin.pages.dashboard')" wire:navigate>
-                        {{ __('SuperAdmin') }}
-                    </x-nav-link>
-                </div>
-
 
             </div>
 
@@ -69,6 +57,18 @@ new class extends Component
                         <x-dropdown-link :href="route('profile')" wire:navigate>
                             {{ __('Profile') }}
                         </x-dropdown-link>
+
+                        @if(request()->client->thisUserIsClientAdmin())
+                            <x-dropdown-link :href="route('filament.admin.tenant')">
+                                {{ __('To Admin') }}
+                            </x-dropdown-link>
+                        @endif
+
+                        @if (auth()->user()->isSuperAdmin())
+                            <x-dropdown-link :href="route('filament.superadmin.pages.dashboard')">
+                                {{ __('To SuperAdmin') }}
+                            </x-dropdown-link>
+                        @endif
 
                         <!-- Authentication -->
                         <button wire:click="logout" class="w-full text-start">
@@ -111,6 +111,18 @@ new class extends Component
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+
+                @if(request()->client->thisUserIsClientAdmin())
+                    <x-responsive-nav-link :href="route('filament.admin.tenant')">
+                        {{ __('To Admin') }}
+                    </x-responsive-nav-link>
+                @endif
+
+                @if (auth()->user()->isSuperAdmin())
+                    <x-responsive-nav-link :href="route('filament.superadmin.pages.dashboard')">
+                        {{ __('To SuperAdmin') }}
+                    </x-responsive-nav-link>
+                @endif
 
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">

@@ -206,7 +206,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 
     public function isSuperAdmin(): bool
     {
-        return (bool)$this->is_super_admin;
+        return (bool) $this->is_super_admin;
     }
 
 

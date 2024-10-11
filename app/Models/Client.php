@@ -27,6 +27,15 @@ class Client extends Model implements HasMedia
             ->as('client_user');
     }
 
+
+    /**
+     * Utility method for when $user->clients with pivot-data is used: to get the pivot data for is_admin_on_client
+     */
+    public function thisUserIsClientAdmin(): bool
+    {
+        return (bool) $this->client_user?->is_admin_on_client;
+    }
+
     public function clientUsers(): HasMany
     {
         return $this->hasMany(ClientUser::class);
