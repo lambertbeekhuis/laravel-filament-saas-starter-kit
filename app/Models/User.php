@@ -203,6 +203,11 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
          return implode(' ', array_filter([$this->name, $this->middle_name, $this->last_name]));
     }
 
+    public function getInitialsAttribute()
+    {
+        return $this->last_name ? strtoupper($this->name[0] . $this->last_name[0]) : strtoupper($this->name[0]) . $this->name[1] ?? '';
+    }
+
 
     public function isSuperAdmin(): bool
     {

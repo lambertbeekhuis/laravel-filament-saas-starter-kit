@@ -5,7 +5,7 @@ TODO:
 - Admin en Superadmin links under 'Lambert'/Profile
 
 - Combine all users-stuff of Filament
-- SaasAuth maken? Sla ik de Tenant op in de sessie? Ja!
+- SaasAuth maken? Sla ik de Tenant op in de sessie? Ja! https://laracasts.com/discuss/channels/laravel/add-cutom-function-to-auth-facade
 - Switchen naar een ander User maken
 
 - Superadmin: client->users active and admin editable maken
