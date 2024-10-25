@@ -6,7 +6,10 @@
     </x-slot>
 
     <div class="py-12 flex flex-row w-full">
-        <div class="basis-2/3"></div>
+        <div class="basis-2/3">
+            <div>{{auth()->client()}}</div>
+            <div>{{auth()->client()}}</div>
+        </div>
         <div class="basis-1/3 max-w-7xl sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 

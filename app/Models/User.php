@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
+use App\Models\Client;
 use Filament\Panel;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
@@ -151,6 +152,11 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         return $this->hasMany(ClientUser::class);
     }
 
+
+    /**
+     * To retrieve related client for logged-in user $this->clientsLastLogin(session('tenant', null))->first();
+     * Or shorter/better auth()->client();
+     */
     public function clientsLastLogin(?int $tenant_id = null): BelongsToMany
     {
         return $this->clients()
