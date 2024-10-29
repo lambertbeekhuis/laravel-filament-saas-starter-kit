@@ -23,7 +23,7 @@ class SecureTenantMiddleware
         $user = $request->user();
 
         // get this client, or the last logged-in client
-        if (!$client = $user->clientsLastLogin($tenant_id)->first()) {
+        if (!$client = $user->authClientForUser($tenant_id)) {
             abort(403);
         }
 

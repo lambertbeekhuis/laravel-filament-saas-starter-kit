@@ -51,7 +51,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         'remember_token',
     ];
 
-    protected $tenant = null;
+    protected $authClient = false; // false indicates: not retrieved yet
 
     /**
      * Get the attributes that should be cast.
@@ -180,6 +180,17 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->orderBy('last_login_at', 'desc');
     }
 
+    /**
+     * Specific function for auth()->client() to retrieve the CACHED client for the )authenticated) user
+     */
+    public function authClientForUser($tenant): ?Client
+    {
+        if ($this->authClient === false) {
+            $this->authClient = $this->clientsLastLogin($tenant)->first();
+        }
+        return $this->authClient;
+    }
+
 
     public static function getUsersForClient(int $client_id): Collection
     {
@@ -194,14 +205,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->get();
     }
 
-
-    /**
-     * This should not be here, but in Auth or something, but it's here for now
-     */
-    public function getClientFromSession(): ?Client
-    {
-        return $this->clientsLastLogin(session('tenant', null))->first();
-    }
 
 
     public function getFullNameAttribute()
