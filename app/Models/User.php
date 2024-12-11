@@ -5,7 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
-use App\Models\Client;
+use App\Models\Tenant;
 use Filament\Panel;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
@@ -51,7 +51,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         'remember_token',
     ];
 
-    protected $authClient = false; // false indicates: not retrieved yet
+    protected $authTenant = false; // false indicates: not retrieved yet
 
     /**
      * Get the attributes that should be cast.
@@ -68,26 +68,27 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 
     public function teams(): BelongsToMany
     {
-        return $this->clients();
+        return $this->tenants();
 
     }
 
     /**
      * For Filament admin panel https://github.com/filamentphp/filament/discussions/7668
+     *
      */
-    public function client(): BelongsToMany
+    public function tenant(): BelongsToMany
     {
-        return $this->clients()->where('client_id', Filament::getTenant()->id);
+        return $this->tenants()->where('tenant_id', Filament::getTenant()->id);
     }
 
     public function getTenants(Panel $panel): Collection
     {
-        return $this->clients;
+        return $this->tenants;
     }
 
     public function canAccessTenant(Model $tenant): bool
     {
-        return $this->clients()->whereKey($tenant)->exists();
+        return $this->tenants()->whereKey($tenant)->exists();
     }
 
     public function canAccessPanel(Panel $panel): bool
@@ -95,13 +96,13 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         switch ($panel->getId()) {
             case 'admin':
                 if ($tenant_id = request()->route('tenant')) {
-                    $clientUser = ClientUser::query()
+                    $tenantUser = TenantUser::query()
                         ->where('user_id', $this->id)
-                        ->where('client_id', $tenant_id)
-                        ->where('is_active_on_client', true)
-                        ->where('is_admin_on_client', true)
+                        ->where('tenant_id', $tenant_id)
+                        ->where('is_active_on_tenant', true)
+                        ->where('is_admin_on_tenant', true)
                         ->first();
-                    return (boolean) $clientUser;
+                    return (boolean) $tenantUser;
                 }
                 return true; // without tenant specified, you have access to /admin, which will be redirect to something with tenant
             case 'superadmin':
@@ -127,81 +128,81 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 
 
     /**
-     * is_active and is_admin are pivot columns, accessed by client_user->is_active_on_client and client_user->is_admin_on_client
+     * is_active and is_admin are pivot columns, accessed by tenant_user->is_active_on_tenant and tenant_user->is_admin_on_tenant
      */
-    public function clients(): BelongsToMany
+    public function tenants(): BelongsToMany
     {
-        return $this->belongsToMany(Client::class, 'client_users')
-            // ->using(ClientUser::class)
-            ->withPivot('is_active_on_client', 'is_admin_on_client', 'last_login_at', 'created_at')
-            ->as('client_user');
+        return $this->belongsToMany(Tenant::class, 'tenant_users')
+            // ->using(TenantUser::class)
+            ->withPivot('is_active_on_tenant', 'is_admin_on_tenant', 'last_login_at', 'created_at')
+            ->as('tenant_user');
     }
 
     /**
-     * Access pivot columns as retrieved by above clients() relationship
+     * Access pivot columns as retrieved by above tenants() relationship
      * Can be used in e.g. Filament
      */
-    public function getClientUserPivotAttribute()
+    public function getTenantUserPivotAttribute()
     {
-        return $this->clients->first()->client_user;
+        return $this->tenants->first()->tenant_user;
     }
 
 
-    public function clientUsers(): HasMany
+    public function tenantUsers(): HasMany
     {
-        return $this->hasMany(ClientUser::class);
+        return $this->hasMany(TenantUser::class);
     }
 
 
     /**
-     * To retrieve related client for logged-in user $this->clientsLastLogin(session('tenant', null))->first();
-     * Or shorter/better auth()->client();
+     * To retrieve related tenant for logged-in user $this->tenantsLastLogin(session('tenant', null))->first();
+     * Or shorter/better auth()->tenant();
      */
-    public function clientsLastLogin(?int $tenant_id = null): BelongsToMany
+    public function tenantsLastLogin(?int $tenant_id = null): BelongsToMany
     {
-        return $this->clients()
-            ->where('client_users.is_active_on_client', true)
-            ->where('clients.is_active', true)
+        return $this->tenants()
+            ->where('tenant_users.is_active_on_tenant', true)
+            ->where('tenants.is_active', true)
             ->when($tenant_id, function ($query, $tenant_id) {
-                $query->where('clients.id', $tenant_id);
+                $query->where('tenants.id', $tenant_id);
             })
             ->orderBy('last_login_at', 'desc');
     }
 
-    public function clientUsersLastLogin(?int $tenant_id): HasMany
+    public function tenantUsersLastLogin(?int $tenant_id): HasMany
     {
-        return $this->clientUsers()
-            ->join('clients', 'client_users.client_id', '=', 'clients.id')
-            ->where('clients.is_active', true)
-            ->where('client_users.is_active_on_client', true)
+        return $this->tenantUsers()
+            ->join('tenants', 'tenant_users.tenant_id', '=', 'tenants.id')
+            ->where('tenants.is_active', true)
+            ->where('tenant_users.is_active_on_tenant', true)
             ->when($tenant_id, function ($query, $tenant_id) {
-                $query->where('client_users.client_id', $tenant_id);
+                $query->where('tenant_users.tenant_id', $tenant_id);
             })
             ->orderBy('last_login_at', 'desc');
     }
 
     /**
-     * Specific function for auth()->client() to retrieve the CACHED client for the )authenticated) user
+     * Specific function for auth()->tenant() to retrieve the CACHED tenant for the )authenticated) user
      */
-    public function authClientForUser($tenant): ?Client
+    public function authTenantForUser($tenant): ?Tenant
     {
-        if ($this->authClient === false) {
-            $this->authClient = $this->clientsLastLogin($tenant)->first();
+        if ($this->authTenant === false) {
+            $this->authTenant = $this->tenantsLastLogin($tenant)->first();
         }
-        return $this->authClient;
+        return $this->authTenant;
     }
 
 
-    public static function getUsersForClient(int $client_id): Collection
+    public static function getUsersForTenant(int $tenant_id): Collection
     {
         return User::query()
-            ->join('client_users', 'users.id', '=', 'client_users.user_id')
-            ->where('client_users.client_id', $client_id)
-            ->where('client_users.is_active_on_client', true)
+            ->join('tenant_users', 'users.id', '=', 'tenant_users.user_id')
+            ->where('tenant_users.tenant_id', $tenant_id)
+            ->where('tenant_users.is_active_on_tenant', true)
             ->where('users.is_active', true)
             ->addSelect('users.*')
-            ->addSelect('client_users.is_admin_on_client')
-            ->addSelect('client_users.last_login_at')
+            ->addSelect('tenant_users.is_admin_on_tenant')
+            ->addSelect('tenant_users.last_login_at')
             ->get();
     }
 

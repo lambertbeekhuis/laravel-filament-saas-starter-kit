@@ -3,7 +3,7 @@
 This setup saves you many hours of work and is a great starting point for your next Saas-project.
 
 The Laravel-Filament-Saas-Setup is a pre-configured setup for starting your own Saas-application.
-It handles access-restriction based on the Tenant/Client, and the admin for both the Client and you as a SuperAdmin. 
+It handles access-restriction based on the Tenant, and the admin for both the tenant and you as a SuperAdmin. 
 You can start directly with implementing your business logic without spending time on setting up the basic Saas-structure.
 
 The Laravel-Filament-Saas-Setup contains database-setup only. The Premium-version is a private repository with full setup for starting your project.
@@ -11,18 +11,18 @@ The Laravel-Filament-Saas-Setup contains database-setup only. The Premium-versio
 You can contact Lambert [lambert@jovisst.nl](maillto:lambert@jovisst.nl) for access to the Premium-version.
 
 The setup includes the following features:
-- A Tenant/Client can have multiple users
-- A user can have access to multiple Tenants/Clients
-- SecureTenant-middleware for client-access restriction
+- A Tenant/tenant can have multiple users
+- A user can have access to multiple Tenants
+- SecureTenant-middleware for tenant-access restriction
 - A user has a profile with basic information, including a profile picture
-- A clientAdmin for clients to manage their users etc
-- A superAdmin for you to manage your clients and users
+- A tenantAdmin for tenants to manage their users etc
+- A superAdmin for you to manage your tenants and users
 
 ## Used components
 The Laravel-Filament-Saas-Setup is based upon Laravel Breeze wihh the following components:
 - Laravel 11
 - Breeze (Volt Class API with AlpineJS)
-- Filament 3.0 using the Tenant-structure for the clientAdmin and superAdmin
+- Filament 3.0 using the Tenant-structure for the tenantAdmin and superAdmin
 - [Spatie Media Library](https://spatie.be/docs/laravel-medialibrary/v11/introduction) (e.g. profile picture)
 - Sentry-setup for error tracking
 - Mailgun-setup for sending emails
@@ -37,7 +37,7 @@ The Laravel-Filament-Saas-Setup is based upon Laravel Breeze wihh the following 
 - Run `npm run dev`
 - Run `php artisan migrate`
 - Run `php artisan serve`
-- Make your first (superAdmin) user by running `php artisan app:make-user your@mail yourName yourPassword yourClientName --clientAdmin --superAdmin`
+- Make your first (superAdmin) user by running `php artisan app:make-user your@mail yourName yourPassword yourTenantName --tenantAdmin --superAdmin`
 - Open your browser and go to `http://127.0.0.1:8000`
 
 ## Contributing

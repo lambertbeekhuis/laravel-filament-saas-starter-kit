@@ -20,10 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // this add auth()->client() to the auth-facade
-        Auth::macro('client', function () {
+        // this add auth()->tenant() to the auth-facade
+        Auth::macro('tenant', function () {
             $tenant = session('tenant', null);
-            return $tenant ? Auth::user()?->authClientForUser($tenant) : null;
+            return $tenant ? Auth::user()?->authTenantForUser($tenant) : null;
         });
     }
 }

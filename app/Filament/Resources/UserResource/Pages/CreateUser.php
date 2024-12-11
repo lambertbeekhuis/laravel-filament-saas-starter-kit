@@ -20,8 +20,8 @@ class CreateUser extends CreateRecord
         $record = parent::handleRecordCreation($data);
 
         if ($data['sent_invitation'] ?? false) {
-            $client = Filament::getTenant();
-            Notification::send($record, new SentInvitationToUserNotification($record, $client));
+            $tenant = Filament::getTenant();
+            Notification::send($record, new SentInvitationToUserNotification($record, $tenant));
         }
         return $record;
     }

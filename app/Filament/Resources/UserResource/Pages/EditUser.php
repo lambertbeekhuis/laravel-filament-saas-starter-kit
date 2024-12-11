@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
-use App\Mail\InviteUserToClientMail;
+use App\Mail\InviteUserToTenantMail;
 use App\Mail\TestMail;
-use App\Models\Client;
-use App\Models\ClientUser;
+use App\Models\Tenant;
+use App\Models\TenantUser;
 use App\Notifications\SentInvitationToUserNotification;
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -34,9 +34,9 @@ class EditUser extends EditRecord
         $tenant = Filament::getTenant();
         $record = $this->record;
 
-        $clientUser = ClientUser::findOneForUserAndClient($this->record->id, $tenant->id);
-        $data['is_active_on_client'] = $clientUser->is_active_on_client;
-        $data['is_admin_on_client'] = $clientUser->is_admin_on_client;
+        $tenantUser = TenantUser::findOneForUserAndTenant($this->record->id, $tenant->id);
+        $data['is_active_on_tenant'] = $tenantUser->is_active_on_tenant;
+        $data['is_admin_on_tenant'] = $tenantUser->is_admin_on_tenant;
         return $data;
     }
 
@@ -46,15 +46,15 @@ class EditUser extends EditRecord
         $record =  parent::handleRecordUpdate($record, $data);
 
         $tenant = Filament::getTenant();
-        $clientUser = ClientUser::findOneForUserAndClient($this->record->id, $tenant->id);
-        $clientUser->update([
-            'is_active_on_client' => $data['is_active_on_client'],
-            'is_admin_on_client' => $data['is_admin_on_client'],
+        $tenantUser = TenantUser::findOneForUserAndTenant($this->record->id, $tenant->id);
+        $tenantUser->update([
+            'is_active_on_tenant' => $data['is_active_on_tenant'],
+            'is_admin_on_tenant' => $data['is_admin_on_tenant'],
         ]);
 
         if ($data['sent_invitation'] ?? false) {
-            $client = Filament::getTenant();
-            Notification::send($record, new SentInvitationToUserNotification($record, $client));
+            $tenant = Filament::getTenant();
+            Notification::send($record, new SentInvitationToUserNotification($record, $tenant));
         }
 
         return $record;
@@ -85,9 +85,9 @@ class EditUser extends EditRecord
     public function sendInvitation(): void
     {
         $user = $this->record;
-        $client = Filament::getTenant();
+        $tenant = Filament::getTenant();
         $result = Mail::to($user->email)
-            ->send(new InviteUserToClientMail($user, $client));
+            ->send(new InviteUserToTenantMail($user, $tenant));
 
     }
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Superadmin\Resources\ClientResource\RelationManagers;
+namespace App\Filament\Superadmin\Resources\TenantResource\RelationManagers;
 
-use App\Models\Client;
-use App\Models\ClientUser;
+use App\Models\Tenant;
+use App\Models\TenantUser;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -25,7 +25,7 @@ class UsersRelationManager extends RelationManager
 
         return $form
             ->schema([
-                Forms\Components\Hidden::make('client_id')
+                Forms\Components\Hidden::make('tenant_id')
                     ->default($this->getOwnerRecord()->id), // used for sending email
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -60,9 +60,9 @@ class UsersRelationManager extends RelationManager
                     // might be made hidden of already logged in once
                     ->default(false),
                 /*
-                Forms\Components\Toggle::make('client_user.is_active'),
+                Forms\Components\Toggle::make('tenant_user.is_active'),
 
-                Forms\Components\Toggle::make('client_user.is_admin'),
+                Forms\Components\Toggle::make('tenant_user.is_admin'),
                 */
 
             ]);
@@ -84,13 +84,13 @@ class UsersRelationManager extends RelationManager
                     // ->thumbnail()
                     // ->maxWidth('50px')
                     //->maxHeight('50px'),
-                Tables\Columns\IconColumn::make('client_user.is_active_on_client')
-                    ->label('Active on client')
+                Tables\Columns\IconColumn::make('tenant_user.is_active_on_tenant')
+                    ->label('Active on tenant')
                     ->boolean(),
-                Tables\Columns\IconColumn::make('client_user.is_admin_on_client')
-                    ->label('ClientAdmin')
+                Tables\Columns\IconColumn::make('tenant_user.is_admin_on_tenant')
+                    ->label('tenantAdmin')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('client_user.last_login_at')
+                Tables\Columns\TextColumn::make('tenant_user.last_login_at')
                     ->label('Last login'),
 
             ])
@@ -105,9 +105,9 @@ class UsersRelationManager extends RelationManager
                     ->using(function ($record, array $data) {
                         $data['password'] = 'to be generated';
                         $user = User::create($data);
-                        $clientUser = ClientUser::create(['client_id' => $data['client_id'], 'user_id' => $user->id]);
+                        $tenantUser = TenantUser::create(['tenant_id' => $data['tenant_id'], 'user_id' => $user->id]);
                         if ($data['sent_invitation'] ?? false) {
-                            Notification::send($user, new SentInvitationToUserNotification($user, Client::find($data['client_id'])));
+                            Notification::send($user, new SentInvitationToUserNotification($user, Tenant::find($data['tenant_id'])));
                         }
                         return $user;
                     }),
@@ -123,7 +123,7 @@ class UsersRelationManager extends RelationManager
                     ->using(function ($record, array $data) {
                         $record->update($data);
                         if ($data['sent_invitation'] ?? false) {
-                            Notification::send($record, new SentInvitationToUserNotification($record, Client::find($data['client_id'])));
+                            Notification::send($record, new SentInvitationToUserNotification($record, Tenant::find($data['tenant_id'])));
                         }
                         return $record;
                     }),

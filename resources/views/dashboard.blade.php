@@ -7,15 +7,15 @@
 
     <div class="py-12 flex flex-row w-full">
         <div class="basis-2/3">
-            <div>{{auth()->client()}}</div>
-            <div>{{auth()->client()}}</div>
+            <div>{{auth()->tenant()}}</div>
+            <div>{{auth()->tenant()}}</div>
         </div>
         <div class="basis-1/3 max-w-7xl sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
                 <div class="bg-white shadow-md rounded-md overflow-hidden max-w-lg mx-auto">
                     <div class="bg-gray-300 py-2 px-4">
-                        <h2 class="text-xl font-semibold text-gray-800">Users of {{$client->name}}</h2>
+                        <h2 class="text-xl font-semibold text-gray-800">Users of {{$tenant->name}}</h2>
                     </div>
                     <ul class="divide-y divide-gray-200">
                         @foreach($users as $user)

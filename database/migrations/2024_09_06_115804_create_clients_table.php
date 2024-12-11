@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('tenants', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->boolean('is_active')->default(true);
@@ -23,15 +23,15 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('client_users', function (Blueprint $table) {
+        Schema::create('tenant_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained();
+            $table->foreignId('tenant_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->dateTime('last_login_at')->nullable();
-            $table->boolean('is_active_on_client')->default(true);
-            $table->boolean('is_admin_on_client')->default(false);
+            $table->boolean('is_active_on_tenant')->default(true);
+            $table->boolean('is_admin_on_tenant')->default(false);
             $table->timestamps();
-            $table->unique(['client_id', 'user_id']);
+            $table->unique(['tenant_id', 'user_id']);
         });
 
     }
@@ -41,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('tenants');
     }
 };

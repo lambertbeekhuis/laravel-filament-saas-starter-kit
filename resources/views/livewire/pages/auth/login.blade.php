@@ -33,12 +33,12 @@ new #[Layout('layouts.guest')] class extends Component
             $this->redirectIntended(route('login', absolute: false));
         }
         // check for clientUser
-        if ($clientUserLast = $user->clientUsersLastLogin(null)->first()) {
+        if ($clientUserLast = $user->tenantUsersLastLogin(null)->first()) {
             $clientUserLast->update(['last_login_at' => now()]);
             $this->redirectIntended(default: route('dashboard', parameters: ['tenant' => $clientUserLast->client_id], absolute: false), navigate: true);
         } else {
             throw ValidationException::withMessages([
-                'form.email' => trans('No active Tenant/Client found for user: '. $user->email), // was 'auth.failed'
+                'form.email' => trans('No active Tenant/Tenant found for user: '. $user->email), // was 'auth.failed'
             ]);
 
             // do not know if this works within Livewire

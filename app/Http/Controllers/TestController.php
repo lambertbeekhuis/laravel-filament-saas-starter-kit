@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use App\Models\ClientUser;
+use App\Models\Tenant;
+use App\Models\TenantUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,22 +26,22 @@ class TestController extends Controller
 
         switch ($type) {
             case 'lastlogin':
-                $client = $user->clientsLastLogin()->first();
-                $client_id = $client->client_user->client_id;
-                ClientUser::updateLastLoginForUserAndClient($user->id, $client_id);
+                $tenant = $user->tenantsLastLogin()->first();
+                $tenant_id = $tenant->tenant_user->tenant_id;
+                TenantUser::updateLastLoginForUserAndTenant($user->id, $tenant_id);
 
                 return view('welcome');
             case 'notification':
                 // sent email with (breeze) template https://laraveldaily.com/post/laravel-breeze-user-name-auth-email-templates
                 $user = User::find(1);
-                $client = Client::find(1);
-                $user->notify(new SentInvitationToUserNotification($user, $client));
+                $tenant = Tenant::find(1);
+                $user->notify(new SentInvitationToUserNotification($user, $tenant));
                 return view('welcome');
             case 'mail':
                 Mail::to($user->email)->send(new TestMail());
                 return view('welcome');
-            case 'clientUser':
-                $clientUserLast = $user->clientUsersLastLogin()->first();
+            case 'tenantUser':
+                $tenantUserLast = $user->tenantUsersLastLogin()->first();
 
                 return view('welcome');
 
@@ -49,22 +49,22 @@ class TestController extends Controller
 
                 break;
 
-            case 'client':
+            case 'tenant':
                 $user = User::find(1);
-                //$clientUsers1 = $user->clientUsers;
-                //$clientUsers = ClientUser::all();
-                $clients = $user->clients;
-                $clientFirst = $clients->first();
-                $clientUserData = $clientFirst->client_user;
+                //$tenantUsers1 = $user->tenantUsers;
+                //$tenantUsers = TenantUser::all();
+                $tenants = $user->tenants;
+                $tenantFirst = $tenants->first();
+                $tenantUserData = $tenantFirst->tenant_user;
 
-                $clientUserIsActive = $clientUserData->is_active_on_client;
-                $clientUserIsAdmin = $clientUserData->is_admin_on_client;
+                $tenantUserIsActive = $tenantUserData->is_active_on_tenant;
+                $tenantUserIsAdmin = $tenantUserData->is_admin_on_tenant;
 
-                dd($clients, $clientUserData, $clientUserIsAdmin, $clientUserIsActive);
+                dd($tenants, $tenantUserData, $tenantUserIsAdmin, $tenantUserIsActive);
 
 
 
-                $result = $user->clients;
+                $result = $user->tenants;
 
 
                 break;

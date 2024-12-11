@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Models\Client;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,7 +17,7 @@ class SentInvitationToUserNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public User $user, public Client $client)
+    public function __construct(public User $user, public Tenant $tenant)
     {
         //
     }
@@ -38,8 +38,8 @@ class SentInvitationToUserNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->subject(Lang::get('Join :client on Huddle', ['client' => $this->client->name]))
-                    ->line(Lang::get('You have been invited to join :client.', ['client' => $this->client->name]))
+                    ->subject(Lang::get('Join :tenant on Huddle', ['tenant' => $this->tenant->name]))
+                    ->line(Lang::get('You have been invited to join :tenant.', ['tenant' => $this->tenant->name]))
                     ->line(Lang::get('Generate your password to join for your account :email.', ['email' => $this->user->email]))
                     ->line(Lang::get('Please click the button below to join.'))
                     ->action('Generate password', route('password.request', ['email' => $this->user->email]))

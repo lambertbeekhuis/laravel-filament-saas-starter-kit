@@ -6,23 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
-class ClientUser extends Model
+class TenantUser extends Model
 {
     use HasFactory;
 
-    protected $table = 'client_users';
+    protected $table = 'tenant_users';
 
     protected $fillable = [
-        'client_id',
+        'tenant_id',
         'user_id',
         'last_login_at',
-        'is_active_on_client',
-        'is_admin_on_client',
+        'is_active_on_tenant',
+        'is_admin_on_tenant',
     ];
 
-    public function client(): BelongsTo
+    public function tenant(): BelongsTo
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Tenant::class);
     }
 
     public function user(): BelongsTo
@@ -30,10 +30,10 @@ class ClientUser extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function findOneForUserAndClient($userId, $clientId)
+    public static function findOneForUserAndTenant($userId, $tenantId)
     {
         return static::where('user_id', $userId)
-            ->where('client_id', $clientId)
+            ->where('tenant_id', $tenantId)
             ->first();
     }
 
@@ -41,9 +41,9 @@ class ClientUser extends Model
      * Update-query, without retrieving the model first
      * Does not update the updated_at column field either
      */
-    public static function updateLastLoginForUserAndClient(int $userId, int $clientId): void
+    public static function updateLastLoginForUserAndTenant(int $userId, int $tenantId): void
     {
-        DB::update("UPDATE client_users SET last_login_at = NOW() WHERE user_id = ? AND client_id = ?", [$userId, $clientId]);
+        DB::update("UPDATE tenant_users SET last_login_at = NOW() WHERE user_id = ? AND tenant_id = ?", [$userId, $tenantId]);
     }
 
 }

@@ -9,13 +9,13 @@ class AppController extends Controller
 {
     public function dashboard(Request $request)
     {
-        $client = $request->client;
+        $tenant = $request->tenant;
 
-        $users = User::getUsersForClient($client->id);
+        $users = User::getUsersForTenant($tenant->id);
 
 
         return view('dashboard', [
-            'client' => $client,
+            'tenant' => $tenant,
             'users' => $users,
         ]);
     }

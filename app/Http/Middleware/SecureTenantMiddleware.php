@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\ClientUser;
+use App\Models\TenantUser;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,20 +22,20 @@ class SecureTenantMiddleware
 
         $user = $request->user();
 
-        // get this client, or the last logged-in client
-        if (!$client = $user->authClientForUser($tenant_id)) {
+        // get this tenant, or the last logged-in tenant
+        if (!$tenant = $user->authTenantForUser($tenant_id)) {
             abort(403);
         }
 
         // if tenant_id is not in session, update session and set last login
         if (!$tenant_id_session) {
-            $client_id = $client->client_user->client_id;
-            ClientUser::updateLastLoginForUserAndClient($user->id, $client_id);
-            session(['tenant' => $client->id]);
+            $tenant_id = $tenant->tenant_user->tenant_id;
+            TenantUser::updateLastLoginForUserAndTenant($user->id, $tenant_id);
+            session(['tenant' => $tenant->id]);
         }
 
         // inject into request
-        $request->client = $client;
+        $request->tenant = $tenant;
 
         return $next($request);
     }

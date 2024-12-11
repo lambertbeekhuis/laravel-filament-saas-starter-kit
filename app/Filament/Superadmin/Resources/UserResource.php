@@ -64,15 +64,15 @@ class UserResource extends Resource
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('client')
-                    ->label('Clients')
+                Tables\Columns\TextColumn::make('tenant')
+                    ->label('Tenants')
                     ->html()
                     ->getStateUsing( function (User $record) {
                         $html = '';
-                        foreach ($record->clients as $client) {
+                        foreach ($record->tenants as $tenant) {
                             $html .= sprintf('<div class="badge badge-primary"><a href="%s">%s</a?</div>',
-                                route('filament.superadmin.resources.clients.edit', ['record' => $client->id]),
-                                $client->name
+                                route('filament.superadmin.resources.tenants.edit', ['record' => $tenant->id]),
+                                $tenant->name
                             );
                         }
                         return $html;

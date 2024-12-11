@@ -59,7 +59,7 @@ new class extends Component
                         </x-dropdown-link>
 
 
-                        @if(auth()->client()?->relatedUserIsClientAdmin())
+                        @if(auth()->tenant()?->relatedUserIsTenantAdmin())
                             <x-dropdown-link :href="route('filament.admin.tenant')">
                                 {{ __('To Admin') }}
                             </x-dropdown-link>
@@ -113,7 +113,7 @@ new class extends Component
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
-                @if(auth()->client()->relatedUserIsClientAdmin())
+                @if(auth()->tenant()->relatedUserIsTenantAdmin())
                     <x-responsive-nav-link :href="route('filament.admin.tenant')">
                         {{ __('To Admin') }}
                     </x-responsive-nav-link>

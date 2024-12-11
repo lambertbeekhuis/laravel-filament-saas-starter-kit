@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\Client;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * @deprecated use Notifications\SentInvitationToUserNotification instead
  */
-class InviteUserToClientMail extends Mailable
+class InviteUserToTenantMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -23,7 +23,7 @@ class InviteUserToClientMail extends Mailable
      */
     public function __construct(
         public User $user,
-        public Client $client
+        public Tenant $tenant
     )
     {
         //
@@ -35,7 +35,7 @@ class InviteUserToClientMail extends Mailable
     public function envelope(): Envelope
     {
         $subject = sprintf('Uitnodiging voor "%s"',
-            $this->client->name,
+            $this->tenant->name,
         );
 
         return new Envelope(
@@ -49,7 +49,7 @@ class InviteUserToClientMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.inviteUserToClient',
+            view: 'emails.inviteUserToTenant',
         );
     }
 

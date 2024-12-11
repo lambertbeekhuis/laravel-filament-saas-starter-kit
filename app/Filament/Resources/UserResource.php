@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\ClientUser;
+use App\Models\TenantUser;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -26,7 +26,7 @@ class UserResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()
-            ->with('clients')
+            ->with('tenants')
             ->where('users.is_active', true);
 
         return $query;
@@ -60,13 +60,13 @@ class UserResource extends Resource
                 // Forms\Components\Toggle::make('is_active'),
 
                 // data set by mutateFormDataBeforeFill
-                Forms\Components\Toggle::make('is_active_on_client')
-                    ->label('Access to client')
+                Forms\Components\Toggle::make('is_active_on_tenant')
+                    ->label('Access to Tenant')
                     ->hiddenOn('create'),
 
                 // data set by mutateFormDataBeforeFill
-                Forms\Components\Toggle::make('is_admin_on_client')
-                    ->label('ClientAdmin')
+                Forms\Components\Toggle::make('is_admin_on_tenant')
+                    ->label('TenantAdmin')
                     ->hiddenOn('create'),
 
                 Forms\Components\Toggle::make('sent_invitation')
@@ -92,14 +92,14 @@ class UserResource extends Resource
                     ->boolean(),
                 */
 
-                Tables\Columns\TextColumn::make('client_user_pivot.last_login_at')
+                Tables\Columns\TextColumn::make('tenant_user_pivot.last_login_at')
                     ->label('Last login'),
 
-                Tables\Columns\IconColumn::make('client_user_pivot.is_active_on_client')
+                Tables\Columns\IconColumn::make('tenant_user_pivot.is_active_on_tenant')
                     ->label('Active')
                     ->boolean(),
 
-                Tables\Columns\IconColumn::make('client_user_pivot.is_admin_on_client')
+                Tables\Columns\IconColumn::make('tenant_user_pivot.is_admin_on_tenant')
                     ->label('Admin')
                     ->boolean(),
 

@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\User;
-use App\Models\Client;
-use App\Models\ClientUser;
+use App\Models\Tenant;
+use App\Models\TenantUser;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\Hash;
@@ -16,14 +16,14 @@ class makeUser extends Command implements PromptsForMissingInput
      *
      * @var string
      */
-    protected $signature = 'app:make-user {email : login email of the user} {name : (first)name of the user} {password : password}  {clientName : company name of the user (=tenantName}  {--clientAdmin : is the user a ClientAdmin }  {--superAdmin : is the user a superAdmin}';
+    protected $signature = 'app:make-user {email : login email of the user} {name : (first)name of the user} {password : password}  {tenantName : company name of the user (=tenantName}  {--tenantAdmin : is the user a TenantAdmin }  {--superAdmin : is the user a superAdmin}';
 
     /*
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Make a new User and Client for the SaasSetup app:make-user {email} {name} {password} {clientName} {--clientAdmin} {--superAdmin}';
+    protected $description = 'Make a new User and Tenant for the SaasSetup app:make-user {email} {name} {password} {tenantName} {--tenantAdmin} {--superAdmin}';
 
     /**
      * Execute the console command.
@@ -32,10 +32,10 @@ class makeUser extends Command implements PromptsForMissingInput
     {
         $email = $this->argument('email');
         $name = $this->argument('name');
-        $clientName = $this->argument('clientName');
+        $tenantName = $this->argument('tenantName');
         $password = $this->argument('password');
         $isSuperAdmin = (bool) $this->option('superAdmin') ?? false;
-        $isClientAdmin = (bool) $this->option('clientAdmin') ?? false;
+        $isTenantAdmin = (bool) $this->option('tenantAdmin') ?? false;
 
         $user = User::where('email', $email)->first();
         if (!$user) {
@@ -50,27 +50,27 @@ class makeUser extends Command implements PromptsForMissingInput
             echo sprintf("User %s exists\n", $email);
         }
 
-        $client = Client::whereRaw('UPPER(name) LIKE ?', ['%' . strtoupper($clientName) . '%'])->first();
-        if (!$client) {
-            $client = Client::create([
-                'name' => $clientName,
+        $tenant = Tenant::whereRaw('UPPER(name) LIKE ?', ['%' . strtoupper($tenantName) . '%'])->first();
+        if (!$tenant) {
+            $tenant = Tenant::create([
+                'name' => $tenantName,
             ]);
-            echo sprintf(   "Client %s created\n", $clientName);
+            echo sprintf(   "Tenant %s created\n", $tenantName);
         } else {
-            echo sprintf("Client %s exists\n", $clientName);
+            echo sprintf("Tenant %s exists\n", $tenantName);
         }
 
-        $clientUser = ClientUser::findOneForUserAndClient($user->id, $client->id);
-        if (!$clientUser) {
-            $clientUser = ClientUser::create([
+        $tenantUser = TenantUser::findOneForUserAndTenant($user->id, $tenant->id);
+        if (!$tenantUser) {
+            $tenantUser = TenantUser::create([
                 'user_id' => $user->id,
-                'client_id' => $client->id,
-                'is_active_on_client' => true,
-                'is_admin_on_client' => $isClientAdmin,
+                'tenant_id' => $tenant->id,
+                'is_active_on_tenant' => true,
+                'is_admin_on_tenant' => $isTenantAdmin,
             ]);
-            echo "ClientUser created\n";
+            echo "TenantUser created\n";
         } else {
-            echo "ClientUser exists\n";
+            echo "TenantUser exists\n";
         }
 
 

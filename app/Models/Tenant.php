@@ -11,9 +11,11 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Client extends Model implements HasMedia
+class Tenant extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
+
+    protected $table = 'tenants';
 
     protected $fillable = [
         'name',
@@ -22,24 +24,24 @@ class Client extends Model implements HasMedia
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'client_users')
-            ->withPivot('is_active_on_client', 'is_admin_on_client', 'last_login_at', 'created_at')
-            ->as('client_user');
+        return $this->belongsToMany(User::class, 'tenant_users')
+            ->withPivot('is_active_on_tenant', 'is_admin_on_tenant', 'last_login_at', 'created_at')
+            ->as('tenant_user');
     }
 
 
     /**
-     * Utility method for when $user->clients with pivot-data is used: to get the pivot data for is_admin_on_client
-     * E.g. auth()->client()->relatedUserIsClientAdmin()
+     * Utility method for when $user->tenants with pivot-data is used: to get the pivot data for is_admin_on_tenant
+     * E.g. auth()->tenant()->relatedUserIsTenantAdmin()
      */
-    public function relatedUserIsClientAdmin(): bool
+    public function relatedUserIsTenantAdmin(): bool
     {
-        return (bool) $this->client_user?->is_admin_on_client;
+        return (bool) $this->tenant_user?->is_admin_on_tenant;
     }
 
-    public function clientUsers(): HasMany
+    public function tenantUsers(): HasMany
     {
-        return $this->hasMany(ClientUser::class);
+        return $this->hasMany(TenantUser::class);
     }
 
     public function registerMediaConversions(?Media $media = null): void
