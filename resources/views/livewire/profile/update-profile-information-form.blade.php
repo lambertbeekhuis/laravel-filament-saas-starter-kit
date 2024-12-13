@@ -9,15 +9,26 @@ use Livewire\Volt\Component;
 new class extends Component
 {
     public string $name = '';
+    public ?string $middle_name = '';
+    public ?string $last_name = '';
     public string $email = '';
+    public ?string $phone = '';
+
+
+
 
     /**
      * Mount the component.
      */
     public function mount(): void
     {
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
+        $user = Auth::user();
+
+        $this->name = $user->name;
+        $this->middle_name = $user->middle_name;
+        $this->last_name = $user->last_name;
+        $this->phone = $user->phone;
+        $this->email = $user->email;
     }
 
     /**
@@ -29,7 +40,10 @@ new class extends Component
 
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'phone', 'max:20'], // https://github.com/Propaganistas/Laravel-Phone
         ]);
 
         $user->fill($validated);
@@ -81,6 +95,18 @@ new class extends Component
         </div>
 
         <div>
+            <x-input-label for="middle_name" :value="__('Middle name')" />
+            <x-text-input wire:model="middle_name" id="middle_name" name="middle_name" type="text" class="mt-1 block w-full" autocomplete="middle_name" />
+            <x-input-error class="mt-2" :messages="$errors->get('middle_name')" />
+        </div>
+
+        <div>
+            <x-input-label for="last_name" :value="__('Family name')" />
+            <x-text-input wire:model="last_name" id="last_name" name="last_name" type="text" class="mt-1 block w-full" autocomplete="last_name" />
+            <x-input-error class="mt-2" :messages="$errors->get('last_name')" />
+        </div>
+
+        <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
@@ -102,7 +128,15 @@ new class extends Component
                     @endif
                 </div>
             @endif
+
         </div>
+
+        <div>
+            <x-input-label for="phone" :value="__('Phone')" />
+            <x-text-input wire:model="phone" id="phone" name="phone" type="text" class="mt-1 block w-full" autocomplete="phone" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>

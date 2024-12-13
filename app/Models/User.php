@@ -39,6 +39,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         'is_active',
         'is_super_admin',
         'date_of_birth',
+        'phone'
     ];
 
     /**
@@ -74,7 +75,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
 
     /**
      * For Filament admin panel https://github.com/filamentphp/filament/discussions/7668
-     *
      */
     public function tenant(): BelongsToMany
     {

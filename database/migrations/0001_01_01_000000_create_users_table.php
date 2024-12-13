@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('is_active')->default(true);
             $table->boolean('is_super_admin')->default(false);
+            $table->string('phone', 20)->nullable();
             $table->date('date_of_birth')->nullable();
             $table->rememberToken();
             $table->timestamps();

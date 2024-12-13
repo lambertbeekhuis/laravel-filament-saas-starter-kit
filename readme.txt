@@ -1,17 +1,16 @@
 TODO:
 
-- php artisan command for making a new User
 - edit profile
-- Admin en Superadmin links under 'Lambert'/Profile
 
-- Combine all users-stuff of Filament
+- Combine all users-stuff of Filament into a Base-class
 - SaasAuth maken? Sla ik de Tenant op in de sessie? Ja! https://laracasts.com/discuss/channels/laravel/add-cutom-function-to-auth-facade
 - Switchen naar een ander User maken
 
 - Superadmin: tenant->users active and admin editable maken
 
-
 DONE
+- Admin en Superadmin links under 'Lambert'/Profile
+- php artisan command for making a new User
 - make a component met all users
 - Superadmin: Add Users (basically to search!)
 - Admin: is_admin_on_tenant and is_active_on_tenant toevoegen
