@@ -12,13 +12,13 @@ Route::get('dashboard/{tenant?}', [AppController::class, 'dashboard'])
     ->name('dashboard');
 
 Route::view('profile', 'profile')
-    ->middleware(['auth'])
+    ->middleware(['auth', SecureTenantMiddleware::class])
     ->name('profile');
 
 
 // make route to TestController
 Route::get('/test/{type}', [TestController::class, 'test'])
     // @todo isSuperAdmin
-    ->middleware(['auth', 'verified']);
+    ->middleware(['auth']);
 
 require __DIR__.'/auth.php';
