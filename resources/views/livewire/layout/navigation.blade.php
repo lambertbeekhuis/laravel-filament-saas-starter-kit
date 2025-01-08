@@ -113,13 +113,13 @@ new class extends Component
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
-                @if(auth()->tenant()->relatedUserIsTenantAdmin())
+                @if(auth()->tenant()?->relatedUserIsTenantAdmin())
                     <x-responsive-nav-link :href="route('filament.admin.tenant')">
                         {{ __('To Admin') }}
                     </x-responsive-nav-link>
                 @endif
 
-                @if (auth()->user()->isSuperAdmin())
+                @if (auth()->user()?->isSuperAdmin())
                     <x-responsive-nav-link :href="route('filament.superadmin.pages.dashboard')">
                         {{ __('To SuperAdmin') }}
                     </x-responsive-nav-link>

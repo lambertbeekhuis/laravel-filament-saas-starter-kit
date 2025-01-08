@@ -123,9 +123,13 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->addMediaConversion('thumb')
             ->fit(Fit::Contain, 100, 100)
             ->nonQueued();
-
     }
 
+    public function getProfilePhotoUrl(string $conversionName = 'thumb', $orAvatar = false): ?string
+    {
+        $url = $this->getFirstMediaUrl('profile', $conversionName);
+        return $url ? $url : ($orAvatar ? 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=mp' : null);
+    }
 
     /**
      * is_active and is_admin are pivot columns, accessed by tenant_user->is_active_on_tenant and tenant_user->is_admin_on_tenant

@@ -14,6 +14,10 @@ use App\Notifications\SentInvitationToUserNotification;
 class TestController extends Controller
 {
 
+
+    /**
+     * /test/{type}
+     */
     public function test(Request $request, $type)
     {
         $user = Auth::user();
@@ -31,6 +35,12 @@ class TestController extends Controller
                 TenantUser::updateLastLoginForUserAndTenant($user->id, $tenant_id);
 
                 return view('welcome');
+            case 'photo':
+                $user->addMediaFromUrl('https://www.gong-galaxy.com/cdn/shop/files/1500-T-24-KITE-RANGE-VERTIGO-9M-NAVY-GONGKITE-01_61d9a0e9-3a06-4176-b97b-657c968fa944.png')
+                    ->toMediaCollection('profile');
+
+
+
             case 'notification':
                 // sent email with (breeze) template https://laraveldaily.com/post/laravel-breeze-user-name-auth-email-templates
                 $user = User::find(1);
@@ -44,11 +54,7 @@ class TestController extends Controller
                 $tenantUserLast = $user->tenantUsersLastLogin()->first();
 
                 return view('welcome');
-
-
-
                 break;
-
             case 'tenant':
                 $user = User::find(1);
                 //$tenantUsers1 = $user->tenantUsers;
@@ -71,6 +77,8 @@ class TestController extends Controller
             default:
                 $result = 'type not found';
         }
+
+        return view('welcome');
 
         return response()->json([
             'type' => $type,
