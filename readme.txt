@@ -1,14 +1,14 @@
 TODO:
 
-- edit profile
+- edit profile/profile photo
 
-- Combine all users-stuff of Filament into a Base-class
 - SaasAuth maken? Sla ik de Tenant op in de sessie? Ja! https://laracasts.com/discuss/channels/laravel/add-cutom-function-to-auth-facade
 - Switchen naar een ander User maken
 
 - Superadmin: tenant->users active and admin editable maken
 
 DONE
+- Combine all users-stuff of Filament into a Base-class
 - Admin en Superadmin links under 'Lambert'/Profile
 - php artisan command for making a new User
 - make a component met all users

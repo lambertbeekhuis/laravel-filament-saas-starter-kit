@@ -186,7 +186,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     }
 
     /**
-     * Specific function for auth()->tenant() to retrieve the CACHED tenant for the )authenticated) user
+     * Specific function for auth()->tenant() to retrieve the CACHED tenant for the (authenticated) user
      */
     public function authTenantForUser($tenant): ?Tenant
     {

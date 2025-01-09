@@ -10,9 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 class SecureTenantMiddleware
 {
     /**
-     * Handle an incoming request.
+     * Makes sure a Tenant is selected for authenticated requests.
+     * Get the Tenant, first the url (tenant), second from the session, or last from the last selected tenant
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Injects the tenant into the request (request->tenant),
+     * or available via auth()->tenant() (added to auth in the AppServiceProvider) )
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -22,7 +24,7 @@ class SecureTenantMiddleware
 
         $user = $request->user();
 
-        // get this tenant, or the last logged-in tenant
+        // get this tenant, or the last logged-in tenant (and cache it in user-object)
         if (!$tenant = $user->authTenantForUser($tenant_id)) {
             abort(403);
         }
