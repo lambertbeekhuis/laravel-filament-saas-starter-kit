@@ -1,6 +1,8 @@
 TODO:
 
 - edit profile/profile photo
+- apply to specific Saas-registration (with or without approval)
+
 
 - SaasAuth maken? Sla ik de Tenant op in de sessie? Ja! https://laracasts.com/discuss/channels/laravel/add-cutom-function-to-auth-facade
 - Switchen naar een ander User maken

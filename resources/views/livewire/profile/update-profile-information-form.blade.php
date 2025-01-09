@@ -5,16 +5,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Livewire\Volt\Component;
+use Livewire\WithFileUploads;
 
+/**
+ * https://livewire.laravel.com/docs/uploads
+ */
 new class extends Component
 {
+    use WithFileUploads;
+
     public string $name = '';
     public ?string $middle_name = '';
     public ?string $last_name = '';
     public string $email = '';
     public ?string $phone = '';
-
-
+    public ?string $photo = null; // new uploaded photo
+    public ?string $profile_photo_url = ''; // existing profile photo
 
 
     /**
@@ -29,6 +35,8 @@ new class extends Component
         $this->last_name = $user->last_name;
         $this->phone = $user->phone;
         $this->email = $user->email;
+
+        $this->profile_photo_url = $user->getProfilePhotoUrl('preview');
     }
 
     /**
@@ -44,9 +52,25 @@ new class extends Component
             'last_name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
             'phone' => ['nullable', 'string', 'phone', 'max:20'], // https://github.com/Propaganistas/Laravel-Phone
+            'photo' => ['nullable', 'image', 'max:3048'],
         ]);
 
         $user->fill($validated);
+
+        dd('here');
+
+        // add profile photo
+        $request = request();
+
+        if ($request->hasFile('photo')) {
+            dd($request->hasFile('photo'), $request->file('photo')?->isValid());
+        }
+
+        if ($request->hasFile('profile_photo') && $request->file('profile_photo')->isValid()) {
+            $user->clearMediaCollection('profile');
+            $user->addMediaFromRequest('profile_photo')->toMediaCollection('profile');
+            dd('done');
+        }
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
@@ -87,7 +111,7 @@ new class extends Component
         </p>
     </header>
 
-    <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
+    <form wire:submit="updateProfileInformation" enctype="multipart/form-data" class="mt-6 space-y-6">
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
@@ -135,6 +159,28 @@ new class extends Component
             <x-input-label for="phone" :value="__('Phone')" />
             <x-text-input wire:model="phone" id="phone" name="phone" type="text" class="mt-1 block w-full" autocomplete="phone" />
             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+
+
+        <div>
+            <x-input-label for="photo" value="Profile photo" /> {{-- Label for info file --}}
+            @if($profile_photo_url)
+                <div class="shrink-0 my-2">
+                    <img src="{{ $profile_photo_url }}" alt="Profile photo" class="w-36 h-50 rounded-full" />
+                </div>
+            @endif
+            <label class="block mt-2">
+                <span class="sr-only">Choose photo</span> {{-- Screen reader text --}}
+                <input type="file" wire:model="photo" id="photo" name="photo" accept=".jpg,.jpeg," class="block w-full text-sm text-slate-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-violet-50 file:text-violet-700
+                                    hover:file:bg-violet-100
+                                " /> {{-- File input field --}}
+            </label>
+
+            <x-input-error class="mt-2" :messages="$errors->get('photo')" />
         </div>
 
 
