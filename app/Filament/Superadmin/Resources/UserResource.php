@@ -2,6 +2,7 @@
 
 namespace App\Filament\Superadmin\Resources;
 
+use App\Filament\BaseClasses\BaseUserResource;
 use App\Filament\Superadmin\Resources\UserResource\Pages;
 use App\Filament\Superadmin\Resources\UserResource\RelationManagers;
 use App\Models\User;
@@ -26,29 +27,7 @@ class UserResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('middle_name')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\TextInput::make('last_name')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\DatePicker::make('date_of_birth'),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\Toggle::make('is_active')
-                    ->required(),
-                Forms\Components\Toggle::make('is_super_admin')
-                    ->required(),
-
-            ]);
+        return BaseUserResource::form($form, true);
     }
 
     public static function table(Table $table): Table

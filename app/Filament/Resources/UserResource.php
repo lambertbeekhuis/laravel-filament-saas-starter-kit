@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\BaseClasses\BaseUserResource;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\TenantUser;
@@ -34,46 +35,7 @@ class UserResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('middle_name')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\TextInput::make('last_name')
-                    ->maxLength(255)
-                    ->default(null),
-
-                Forms\Components\SpatieMediaLibraryFileUpload::make('profile_photo')
-                    ->collection('profile')
-                    // ->rules(['required'])
-                    ->image(),
-
-                Forms\Components\DatePicker::make('date_of_birth'),
-
-                // Forms\Components\Toggle::make('is_active'),
-
-                // data set by mutateFormDataBeforeFill
-                Forms\Components\Toggle::make('is_active_on_tenant')
-                    ->label('Access to Tenant')
-                    ->hiddenOn('create'),
-
-                // data set by mutateFormDataBeforeFill
-                Forms\Components\Toggle::make('is_admin_on_tenant')
-                    ->label('TenantAdmin')
-                    ->hiddenOn('create'),
-
-                Forms\Components\Toggle::make('sent_invitation')
-                    ->label('Send invitation email')
-                    // might be made hidden of already logged in once
-                    ->default(false),
-            ]);
+        return BaseUserResource::form($form, false);
     }
 
     public static function table(Table $table): Table
