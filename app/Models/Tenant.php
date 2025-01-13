@@ -57,4 +57,13 @@ class Tenant extends Model implements HasMedia
             ->nonQueued();
 
     }
+
+    public static function findOneForSlugOrId($slugOrId): ?Tenant
+    {
+        return static::where('id', $slugOrId)
+     //       ->orWhere('slug', $slugOrId)
+            ->where('is_active', true)
+            ->first();
+    }
+
 }

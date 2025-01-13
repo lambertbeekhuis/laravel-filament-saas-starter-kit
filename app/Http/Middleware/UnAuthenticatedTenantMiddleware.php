@@ -16,7 +16,8 @@ class UnAuthenticatedTenantMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($tenant_id = $request->get('tenant')) {
+
+        if (!$tenant_id = $request->route('tenant')) {
             abort(404, 'No tenant found in url');
         }
 

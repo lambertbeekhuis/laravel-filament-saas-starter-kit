@@ -20,7 +20,7 @@ class SecureTenantMiddleware
     {
         // get tenant_id from request or from session
         $tenant_id_session = session('tenant', null);
-        $tenant_id = $request->get('tenant', $tenant_id_session);
+        $tenant_id = $request->route('tenant', $tenant_id_session);
 
         $user = $request->user();
 
