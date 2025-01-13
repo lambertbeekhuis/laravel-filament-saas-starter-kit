@@ -66,4 +66,10 @@ class Tenant extends Model implements HasMedia
             ->first();
     }
 
+    public function getLogoUrl(string $conversionName = 'thumb', $orAvatar = false): ?string
+    {
+        $url = $this->getFirstMediaUrl('logo', $conversionName);
+        return $url ? $url : ($orAvatar ? 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->name))) . '?d=mp' : null);
+    }
+
 }

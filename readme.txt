@@ -1,6 +1,6 @@
 TODO:
 
-- edit profile/profile photo
+- edit profilephoto in frontend
 - apply to specific Saas-registration (with or without approval)
 
 - invite a new user for registration
@@ -11,6 +11,7 @@ TODO:
 - Superadmin: tenant->users active and admin editable maken
 
 DONE
+- show tenant-logo in the header
 - Combine all users-stuff of Filament into a Base-class
 - Admin en Superadmin links under 'Lambert'/Profile
 - php artisan command for making a new User
