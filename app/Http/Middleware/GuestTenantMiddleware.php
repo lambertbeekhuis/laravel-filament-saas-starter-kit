@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UnAuthenticatedTenantMiddleware
+class GuestTenantMiddleware
 {
     /**
      * Gets the tenant from the url and injects it into the request
