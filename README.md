@@ -1,6 +1,12 @@
-## About Laravel-Filament-Saas-Setup (Premium)
+## About Laravel-Filament-Saas-Starter-Kit
 
-This setup saves you many hours of work and is a great starting point for your next Saas-project.
+This a starter kit for your next Saas-application. It saves you many hours of setting up the basics for your Saas:
+
+1) Access control for your Saas-frontend
+2) An Admin-panel for your saas-clients/tenants to manage their users and settings
+3) A SuperAdmin-panel for you to manage your clients/tenants and users 
+
+It is based upon the Laravel 11 Breeze and LiveWire starter kit, Filament 3.0 for the admin-panels and other common libraries like Spatie Media Library, Sentry, Mailgun, Laravel-debugbar and more.
 
 The Laravel-Filament-Saas-Setup is a pre-configured setup for starting your own Saas-application.
 It handles access-restriction based on the Tenant, and the admin for both the tenant and you as a SuperAdmin. 
