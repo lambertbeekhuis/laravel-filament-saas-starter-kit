@@ -8,6 +8,7 @@ use Filament\Models\Contracts\HasTenants;
 use App\Models\Tenant;
 use Filament\Panel;
 use Filament\Facades\Filament;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,7 +22,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Image\Enums\Fit;
 
 
-class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
+class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia, MustVerifyEmail
 {
     use HasFactory, Notifiable, interactsWithMedia;
 
