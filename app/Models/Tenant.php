@@ -70,8 +70,7 @@ class Tenant extends Model implements HasMedia
 
     public static function findOneForSlugOrId($slugOrId): ?Tenant
     {
-        return static::where('id', $slugOrId)
-     //       ->orWhere('slug', $slugOrId)
+        return static::where(is_numeric($slugOrId) ? 'id' : 'slug', $slugOrId)
             ->where('is_active', true)
             ->first();
     }

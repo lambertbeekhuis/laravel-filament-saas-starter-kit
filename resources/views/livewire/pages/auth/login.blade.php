@@ -32,6 +32,7 @@ new #[Layout('layouts.guest')] class extends Component
             // add a message, but how ??
             $this->redirectIntended(route('login', absolute: false));
         }
+
         // check for tenantUser
         if ($tenantUserLast = $user->tenantUsersLastLogin(null)->first()) {
             $tenantUserLast->update(['last_login_at' => now()]);
