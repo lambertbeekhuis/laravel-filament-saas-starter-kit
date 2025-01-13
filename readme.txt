@@ -2,6 +2,7 @@ TODO:
 
 - edit profilephoto in frontend
 - apply to specific Saas-registration (with or without approval)
+- tenantname sluggable
 
 - invite a new user for registration
 
