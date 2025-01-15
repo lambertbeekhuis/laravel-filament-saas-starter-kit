@@ -16,7 +16,7 @@ class makeUser extends Command implements PromptsForMissingInput
      *
      * @var string
      */
-    protected $signature = 'app:make-user {email : login email of the user} {name : (first)name of the user} {password : password}  {tenantName : company name of the user (=tenantName}  {--tenantAdmin : is the user a TenantAdmin }  {--superAdmin : is the user a superAdmin}';
+    protected $signature = 'app:make-user {email : login email of the user} {name : (first)name of the user} {password : password}  {tenantName : company name of the user (=tenantName}  {--tenantAdmin : is the user a TenantAdmin }  {--superAdmin : is the user a superAdmin} {--verified: set email to verified}';
 
     /*
      * The console command description.
@@ -36,6 +36,7 @@ class makeUser extends Command implements PromptsForMissingInput
         $password = $this->argument('password');
         $isSuperAdmin = (bool) $this->option('superAdmin') ?? false;
         $isTenantAdmin = (bool) $this->option('tenantAdmin') ?? false;
+        $isVerified = (bool) $this->option('verified') ?? false;
 
         $user = User::where('email', $email)->first();
         if (!$user) {
@@ -44,6 +45,7 @@ class makeUser extends Command implements PromptsForMissingInput
                 'email' => $email,
                 'password' => Hash::make($password),
                 'is_super_admin' => $isSuperAdmin,
+                'email_verified_at' => $isVerified ? now() : null,
             ]);
             echo sprintf("User %s created\n", $email);
         } else {
