@@ -16,14 +16,14 @@ class makeUser extends Command implements PromptsForMissingInput
      *
      * @var string
      */
-    protected $signature = 'app:make-user {email : login email of the user} {name : (first)name of the user} {password : password}  {tenantName : company name of the user (=tenantName}  {--tenantAdmin : is the user a TenantAdmin }  {--superAdmin : is the user a superAdmin} {--verified: set email to verified}';
+    protected $signature = 'app:make-user {email : login email of the user} {name : (first)name of the user} {password : password}  {tenantName : company name of the user (=tenantName}  {--tenantAdmin : is the user a TenantAdmin }  {--superAdmin : is the user a superAdmin} {--verified : set email to verified}';
 
     /*
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Make a new User and Tenant for the SaasSetup app:make-user {email} {name} {password} {tenantName} {--tenantAdmin} {--superAdmin}';
+    protected $description = 'Make a new User and Tenant for the SaasSetup app:make-user {email} {name} {password} {tenantName} {--tenantAdmin} {--superAdmin} {--verified}';
 
     /**
      * Execute the console command.
