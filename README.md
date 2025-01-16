@@ -15,7 +15,7 @@ After installing this starter kit, you can start directly with implementing your
 
 An example of the application can be found at [https://starterkit.jovisst.nl](https://starterkit.jovisst.nl). 
 
-You can login as a SuperAdmin by starterkit@jovisst.nl with password 'starterkit'. You can create your own tenant and users from there.
+You can login as a SuperAdmin by starterkit@jovisst.nl with password 'password'. You can create your own tenant and users from there.
 
 The laravel-filament-saas-starter-kit includes the following features:
 - A Tenant/tenant can have multiple users

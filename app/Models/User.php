@@ -36,6 +36,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         'last_name',
         'middle_name',
         'email',
+        'email_verified_at',
         'password',
         'is_active',
         'is_super_admin',
