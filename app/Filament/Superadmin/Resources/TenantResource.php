@@ -10,6 +10,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -23,21 +26,26 @@ class TenantResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('is_active')
+                Forms\Components\Placeholder::make('empty')
+                    ->label(''),
+                Toggle::make('is_active')
                     ->required(),
-                Forms\Components\TextInput::make('address')
+                Select::make('registration_type')
+                    ->required()
+                    ->options(Tenant::getRegistrationTypes()),
+                TextInput::make('address')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('zip')
+                TextInput::make('zip')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('city')
+                TextInput::make('city')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('country')
+                TextInput::make('country')
                     ->maxLength(255)
                     ->default(null),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('logo')

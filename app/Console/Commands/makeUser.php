@@ -56,6 +56,7 @@ class makeUser extends Command implements PromptsForMissingInput
         if (!$tenant) {
             $tenant = Tenant::create([
                 'name' => $tenantName,
+                'registration_type' => Tenant::REGISTRATION_TYPE_PUBLIC,
             ]);
             echo sprintf(   "Tenant %s created\n", $tenantName);
         } else {

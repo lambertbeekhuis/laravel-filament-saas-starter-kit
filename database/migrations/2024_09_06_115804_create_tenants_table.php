@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('slug')->nullable()->unique();
             $table->boolean('is_active')->default(true);
+            $table->string('registration_type', 16);
             //$table->string('slug')->unique();
             $table->string('address')->nullable();
             $table->string('zip')->nullable();
             $table->string('city')->nullable();
             $table->string('country')->nullable();
+
             $table->timestamps();
         });
 
