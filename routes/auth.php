@@ -3,12 +3,13 @@
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
-use App\Http\Middleware\GuestTenantMiddleware;
+use App\Http\Middleware\PublicTenantMiddleware;
+
+Volt::route('register/{tenant}', 'pages.auth.register')
+    ->name('register')
+    ->middleware(PublicTenantMiddleware::class);
 
 Route::middleware('guest')->group(function () {
-    Volt::route('register/{tenant}', 'pages.auth.register')
-        ->name('register')
-        ->middleware(GuestTenantMiddleware::class);
 
     Volt::route('login', 'pages.auth.login')
         ->name('login');

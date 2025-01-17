@@ -1,21 +1,72 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{$tenant->name}} {{ __('dashboard') }}
         </h2>
     </x-slot>
 
     <div class="py-12 flex flex-row w-full">
-        <div class="basis-2/3">
-            <div>{{auth()->tenant()}}</div>
-            <div>{{auth()->tenant()}}</div>
-        </div>
-        <div class="basis-1/3 max-w-7xl sm:px-6 lg:px-8">
+
+        <div class="basis-2/3 sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
+                <div class="bg-white shadow-md rounded-md overflow-hidden">
+                    <div class="bg-gray-300 py-2 px-4">
+                        <h2 class="text-xl font-semibold text-gray-800">Your Saas info</h2>
+                    </div>
+                    <div class="py-2 px-4">
+                        <p class="mt-4 text-sm/relaxed">This is the dashboard of tenant {{$tenant->name}}, with its own users and own data</p>
+
+                        <p class="mt-4 text-sm/relaxed">Is has users specific to this client/tenant. And you can build your business logic from here!</p>
+
+                        <p class="mt-4 text-sm/relaxed">New users can register for this tenant through here (if you are open for public registration):
+                            <span class="float-right">
+                                <a href="{{route('register', ['tenant' => $tenant->slug])}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" wire:navigate>
+                                    Public registration
+                                </a>
+                            </span>
+                        </p>
+
+                        <p class="mt-4 text-sm/relaxed">
+                            Or you can invite them personally through the Tenant Admin
+                        </p>
+
+                        <p class="mt-4 text-sm/relaxed">
+                            Both the Tenant Admin and the Super Admin can be access through the profile dropdown on the top right.
+                        </p>
+
+                        <p class="mt-4 text-sm/relaxed">
+                            <span class="float-right">
+
+                            @if(auth()->tenant()?->relatedUserIsTenantAdmin())
+                                <a href="{{route('filament.admin.tenant')}}" class="m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    {{ __('To TenantAdmin') }}
+                                </a>
+                            @endif
+
+                            @if (auth()->user()->isSuperAdmin())
+                                <a href="{{route('filament.superadmin.pages.dashboard')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    {{ __('To SuperAdmin') }}
+                                </a>
+                            @endif
+
+                            </span>
+                        </p>
+
+                        <p class="mt-4 text-sm/relaxed">
+                            For more information, see Github
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="basis-1/3 max-w-7xl sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="bg-white shadow-md rounded-md overflow-hidden max-w-lg mx-auto">
                     <div class="bg-gray-300 py-2 px-4">
-                        <h2 class="text-xl font-semibold text-gray-800">Users of {{$tenant->name}}</h2>
+                        <h2 class="text-xl font-semibold text-gray-800">Users</h2>
                     </div>
                     <ul class="divide-y divide-gray-200">
                         @foreach($users as $user)
