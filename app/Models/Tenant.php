@@ -18,8 +18,9 @@ class Tenant extends Model implements HasMedia
 
     protected $table = 'tenants';
 
-    const REGISTRATION_TYPE_PUBLIC = 'public';
-    const REGISTRATION_TYPE_INVITE_PERsONAL = 'invite_personal';
+    const REGISTRATION_TYPE_PUBLIC_DIRECT = 'public_direct';
+    const REGISTRATION_TYPE_PUBLIC_APPROVE = 'public_approve';
+    const REGISTRATION_TYPE_INVITE_PERSONAL = 'invite_personal';
     const REGISTRATION_TYPE_INVITE_SECRET_LINK = 'invite_secret_link';
 
     protected $fillable = [
@@ -81,8 +82,9 @@ class Tenant extends Model implements HasMedia
     public static function getRegistrationTypes(): array
     {
         return [
-            self::REGISTRATION_TYPE_PUBLIC => 'Public',
-            self::REGISTRATION_TYPE_INVITE_PERsONAL => 'Personal Invite',
+            self::REGISTRATION_TYPE_PUBLIC_DIRECT => 'Public, direct access',
+            self::REGISTRATION_TYPE_PUBLIC_APPROVE => 'Public, admin approval',
+            self::REGISTRATION_TYPE_INVITE_PERSONAL => 'Personal Invite',
             self::REGISTRATION_TYPE_INVITE_SECRET_LINK => 'Secret Link Invite',
         ];
     }
