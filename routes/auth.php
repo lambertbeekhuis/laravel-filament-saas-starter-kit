@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Middleware\PublicTenantMiddleware;
 
-Volt::route('register/{tenant}', 'pages.auth.register')
+Volt::route('register/{tenant}/{token?}', 'pages.auth.register')
     ->name('register')
     ->middleware(PublicTenantMiddleware::class);
 

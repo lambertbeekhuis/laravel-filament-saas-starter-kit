@@ -14,7 +14,7 @@ use Livewire\Volt\Component;
 
 new #[Layout('layouts.guest')] class extends Component {
 
-    protected string $tenant_id;
+    protected ?string $token;
     public $tenant;
 
     public string $name = '';
@@ -25,8 +25,15 @@ new #[Layout('layouts.guest')] class extends Component {
 
     public function mount(string $tenant): void
     {
-        $this->tenant_id = $tenant;
         $this->tenant = Tenant::findOneForSlugOrId($tenant);
+        $this->token = request()->token; // optional route-parameter
+
+        if (in_array($this->tenant->registration_type, [Tenant::REGISTRATION_TYPE_INVITE_PERSONAL, Tenant::REGISTRATION_TYPE_INVITE_SECRET_LINK])) {
+            if (!$this->token) {
+                abort(403, 'Token required for registration, no token');
+            }
+            abort(403, 'No implemented yet');
+        }
     }
 
     /**
@@ -48,7 +55,7 @@ new #[Layout('layouts.guest')] class extends Component {
             $tenantUser = TenantUser::create([
                 'tenant_id' => $this->tenant->id,
                 'user_id' => $user->id,
-                'is_active_on_tenant' => true
+                'is_active_on_tenant' => $this->tenant->registration_type === Tenant::REGISTRATION_TYPE_PUBLIC_DIRECT,
             ]);
             DB::commit();
         } catch (\Exception $e) {
@@ -56,12 +63,28 @@ new #[Layout('layouts.guest')] class extends Component {
             throw $e;
         }
 
-        event(new Registered($user));
-        event(new RegisteredTenantUser($tenantUser));
+        //event(new Registered($user));
+        event(new RegisteredTenantUser($tenantUser)); // sends e.g. email
 
-        Auth::login($user);
+        switch ($this->tenant->registration_type) {
+            case Tenant::REGISTRATION_TYPE_PUBLIC_DIRECT:
+                Auth::login($user);
+                $this->redirect(route('dashboard', ['tenant' => $this->tenant->id], false), navigate: true);
+                break;
+            case Tenant::REGISTRATION_TYPE_PUBLIC_APPROVE:
+                // should be notified in the email
+                //@todo add notification
+                $this->redirect(route('home_all', ['tenant' => $this->tenant->id], false), navigate: true);
+                break;
+            case Tenant::REGISTRATION_TYPE_INVITE_PERSONAL:
+                // not implemented yet
 
-        $this->redirect(route('dashboard', $this->tenant->id, false), navigate: true);
+            case Tenant::REGISTRATION_TYPE_INVITE_SECRET_LINK:
+                // not implemented yet
+            default:
+                throw new \Exception('Unknown registration type ' . $this->tenant->registration_type);
+        }
+
     }
 };
 ?>
