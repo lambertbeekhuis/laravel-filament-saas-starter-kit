@@ -175,14 +175,18 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->orderBy('last_login_at', 'desc');
     }
 
-    public function tenantUsersLastLogin(?int $tenant_id): HasMany
+    public function tenantUsersLastLogin(?string $tenant_id_or_slug): HasMany
     {
         return $this->tenantUsers()
             ->join('tenants', 'tenant_users.tenant_id', '=', 'tenants.id')
             ->where('tenants.is_active', true)
             ->where('tenant_users.is_active_on_tenant', true)
-            ->when($tenant_id, function ($query, $tenant_id) {
-                $query->where('tenant_users.tenant_id', $tenant_id);
+            ->when($tenant_id_or_slug, function ($query, $tenant_id_or_slug) {
+                if (is_numeric($tenant_id_or_slug)) {
+                    $query->where('tenant_users.tenant_id', $tenant_id_or_slug);
+                } else {
+                    $query->where('tenants.slug', $tenant_id_or_slug);
+                }
             })
             ->orderBy('last_login_at', 'desc');
     }
@@ -205,7 +209,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->join('tenant_users', 'users.id', '=', 'tenant_users.user_id')
             ->where('tenant_users.tenant_id', $tenant_id)
             ->where('tenant_users.is_active_on_tenant', true)
-            ->where('users.is_active', true)
+            // ->where('users.is_active', true)
             ->addSelect('users.*')
             ->addSelect('tenant_users.is_admin_on_tenant')
             ->addSelect('tenant_users.last_login_at')

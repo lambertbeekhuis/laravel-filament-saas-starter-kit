@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Forms\LoginForm;
+use App\Models\Tenant;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
@@ -9,6 +10,12 @@ use Livewire\Volt\Component;
 new #[Layout('layouts.guest')] class extends Component
 {
     public LoginForm $form;
+    public string $tenantIdOrSlug;
+
+    public function mount(): void
+    {
+        $this->tenantIdOrSlug = request()->tenant; // optional route-parameter
+    }
 
     /**
      * Handle an incoming authentication request.
@@ -34,12 +41,12 @@ new #[Layout('layouts.guest')] class extends Component
         }
 
         // check for tenantUser
-        if ($tenantUserLast = $user->tenantUsersLastLogin(null)->first()) {
+        if ($tenantUserLast = $user->tenantUsersLastLogin($this->tenantIdOrSlug)->first()) {
             $tenantUserLast->update(['last_login_at' => now()]);
-            $this->redirectIntended(default: route('dashboard', parameters: ['tenant' => $tenantUserLast->tenant_id], absolute: false), navigate: true);
+            $this->redirectIntended(default: route('dashboard', parameters: ['tenant' => $this->tenantIdOrSlug], absolute: false), navigate: true);
         } else {
             throw ValidationException::withMessages([
-                'form.email' => trans('No active Tenant/Tenant found for user: '. $user->email), // was 'auth.failed'
+                'form.email' => trans('No active Tenant "'. $this->tenantIdOrSlug .'" found for user: '. $user->email), // was 'auth.failed'
             ]);
 
             // do not know if this works within Livewire
