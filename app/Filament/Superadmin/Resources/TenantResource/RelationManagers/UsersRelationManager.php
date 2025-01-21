@@ -21,8 +21,6 @@ class UsersRelationManager extends RelationManager
 
     public function form(Form $form): Form
     {
-
-
         return $form
             ->schema([
                 Forms\Components\Hidden::make('tenant_id')
@@ -127,7 +125,7 @@ class UsersRelationManager extends RelationManager
                         }
                         return $record;
                     }),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(), // hide delete, as this gives issues: either implement soft delete, or
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
