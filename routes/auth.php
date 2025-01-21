@@ -11,7 +11,7 @@ Volt::route('register/{tenant}/{token?}', 'pages.auth.register')
 
 Route::middleware('guest')->group(function () {
 
-    Volt::route('login', 'pages.auth.login')
+    Volt::route('login/{tenant?}', 'pages.auth.login')
         ->name('login');
 
     Volt::route('forgot-password', 'pages.auth.forgot-password')

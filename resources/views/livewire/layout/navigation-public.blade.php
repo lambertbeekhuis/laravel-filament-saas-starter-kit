@@ -3,6 +3,9 @@
 use App\Livewire\Actions\Logout;
 use Livewire\Volt\Component;
 
+/**
+ * @todo should be improved with just login or other links
+ */
 new class extends Component
 {
     /**
@@ -24,7 +27,7 @@ new class extends Component
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" wire:navigate>
-                        @if ($url = auth()->tenant()?->getLogoUrl('thumb', true))
+                        @if ($url = request()->tenant?->getLogoUrl('thumb', true))
                             <img src="{{ $url }}" alt="Logo" class="block h-16 w-auto fill-current text-gray-800 dark:text-gray-200"/>
                         @else
                             <x-application-logo class="block h-16 w-auto fill-current text-gray-800 dark:text-gray-200" />
@@ -34,9 +37,15 @@ new class extends Component
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    @if (auth()->user())
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    @else
+                        <x-nav-link :href="route('login', ['tenant' => request()->tenant?->slug])" wire:navigate>
+                            {{ __('Login') }}
+                        </x-nav-link>
+                    @endif
                 </div>
 
 
@@ -47,7 +56,7 @@ new class extends Component
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                            <div x-data="{{ json_encode(['name' => auth()->user() ? auth()->user()->name : 'Login']) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -62,18 +71,6 @@ new class extends Component
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
-
-                        @if(auth()->tenant()?->relatedUserIsTenantAdmin())
-                            <x-dropdown-link :href="route('filament.admin.tenant')">
-                                {{ __('To Admin') }}
-                            </x-dropdown-link>
-                        @endif
-
-                        @if (auth()->user()?->isSuperAdmin())
-                            <x-dropdown-link :href="route('filament.superadmin.pages.dashboard')">
-                                {{ __('To SuperAdmin') }}
-                            </x-dropdown-link>
-                        @endif
 
                         <!-- Authentication -->
                         <button wire:click="logout" class="w-full text-start">
@@ -108,8 +105,8 @@ new class extends Component
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800 dark:text-gray-200" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
-                <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
+                <div class="font-medium text-base text-gray-800 dark:text-gray-200" x-data="{{ json_encode(['name' => auth()->user()?->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                <div class="font-medium text-sm text-gray-500">{{ auth()->user()?->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">
@@ -117,17 +114,6 @@ new class extends Component
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
-                @if(auth()->tenant()?->relatedUserIsTenantAdmin())
-                    <x-responsive-nav-link :href="route('filament.admin.tenant')">
-                        {{ __('To Admin') }}
-                    </x-responsive-nav-link>
-                @endif
-
-                @if (auth()->user()?->isSuperAdmin())
-                    <x-responsive-nav-link :href="route('filament.superadmin.pages.dashboard')">
-                        {{ __('To SuperAdmin') }}
-                    </x-responsive-nav-link>
-                @endif
 
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">
