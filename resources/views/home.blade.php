@@ -16,16 +16,17 @@
                     </div>
                     <div class="py-2 px-4">
                         <p class="mt-4 text-sm/relaxed">
-                            This is the public homepage of tenant {{$tenant->name}}.
+                            This is the public accessible homepage of tenant "{{$tenant->name}}".
                         </p>
 
                         <p class="mt-4 text-sm/relaxed">
-                            If you are open for public registration, new users can register for this tenant through here:
-                            <span class="float-right">
-                                <a href="{{route('register', ['tenant' => $tenant->slug])}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" wire:navigate>
-                                    Public registration
-                                </a>
-                            </span>
+                            If the tenant is open for public registration, new users can register for this tenant through here:
+                        </p>
+
+                        <p class="mt-2">
+                            <a href="{{route('register', ['tenant' => $tenant->slug])}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" wire:navigate>
+                                Public registration for {{$tenant->name}}
+                            </a>
                         </p>
 
                         <p class="mt-4 text-sm/relaxed">
@@ -33,7 +34,7 @@
                         </p>
 
                         <p class="mt-4 text-sm/relaxed">
-                            For more information on the setup, see Github.
+                            For more technical information, see Github.
                         </p>
 
                     </div>

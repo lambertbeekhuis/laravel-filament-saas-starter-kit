@@ -209,7 +209,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->join('tenant_users', 'users.id', '=', 'tenant_users.user_id')
             ->where('tenant_users.tenant_id', $tenant_id)
             ->where('tenant_users.is_active_on_tenant', true)
-            // ->where('users.is_active', true)
+            ->where('users.is_active', true)
             ->addSelect('users.*')
             ->addSelect('tenant_users.is_admin_on_tenant')
             ->addSelect('tenant_users.last_login_at')

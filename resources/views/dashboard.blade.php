@@ -15,46 +15,43 @@
                         <h2 class="text-xl font-semibold text-gray-800">Your Saas info</h2>
                     </div>
                     <div class="py-2 px-4">
-                        <p class="mt-4 text-sm/relaxed">This is the dashboard of tenant {{$tenant->name}}, with its own users and own data</p>
+                        <p class="mt-4 relaxed">This is the dashboard of tenant {{$tenant->name}} for authenticated users, with its own Tenant-users and own Tenant-data.</p>
 
-                        <p class="mt-4 text-sm/relaxed">Is has users specific to this client/tenant. And you can build your business logic from here!</p>
+                        <p class="mt-4 relaxed">Is has users specific to this client/tenant. And you can build your business logic from here!</p>
 
-                        <p class="mt-4 text-sm/relaxed">New users can register for this tenant through here (if you are open for public registration):
-                            <span class="float-right">
-                                <a href="{{route('register', ['tenant' => $tenant->slug])}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" wire:navigate>
-                                    Public registration
-                                </a>
-                            </span>
+                        <p class="mt-4 relaxed">New users can register for this tenant through here (if you are open for public registration):</p>
+
+                        <p class="mt-4">
+                            <a href="{{route('register', ['tenant' => $tenant->slug])}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold mx-4 py-2 px-4 rounded" wire:navigate>
+                                Public registration
+                            </a>
                         </p>
 
-                        <p class="mt-4 text-sm/relaxed">
-                            Or you can invite them personally through the Tenant Admin
+
+                        <p class="mt-12 relaxed">
+                            Or you can invite them personally through the TenantAdmin.
                         </p>
 
-                        <p class="mt-4 text-sm/relaxed">
-                            Both the Tenant Admin and the Super Admin can be access through the profile dropdown on the top right.
+                        <p class="mt-4 relaxed">
+                            Both the TenantAdmin and the SuperAdmin can be access through the profile dropdown on the top right, or directly here for the example:
                         </p>
 
-                        <p class="mt-4 text-sm/relaxed">
-                            <span class="float-right">
-
+                        <p class="mt-4">
                             @if(auth()->tenant()?->relatedUserIsTenantAdmin())
-                                <a href="{{route('filament.admin.tenant')}}" class="m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <a href="{{route('filament.admin.tenant')}}" class="m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" target="_blank">
                                     {{ __('To TenantAdmin') }}
                                 </a>
                             @endif
 
                             @if (auth()->user()->isSuperAdmin())
-                                <a href="{{route('filament.superadmin.pages.dashboard')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                <a href="{{route('filament.superadmin.pages.dashboard')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" target="_blank">
                                     {{ __('To SuperAdmin') }}
                                 </a>
                             @endif
-
-                            </span>
                         </p>
 
-                        <p class="mt-4 text-sm/relaxed">
-                            For more information, see Github
+                        <p class="mt-4 relaxed">
+                            For more technical information, see Github.
                         </p>
 
                     </div>

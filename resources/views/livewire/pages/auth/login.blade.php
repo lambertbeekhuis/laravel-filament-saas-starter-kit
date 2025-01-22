@@ -10,7 +10,7 @@ use Livewire\Volt\Component;
 new #[Layout('layouts.guest')] class extends Component
 {
     public LoginForm $form;
-    public string $tenantIdOrSlug;
+    public $tenantIdOrSlug;
 
     public function mount(): void
     {
@@ -36,8 +36,8 @@ new #[Layout('layouts.guest')] class extends Component
             throw ValidationException::withMessages([
                 'form.email' => trans('User is not active '. $user->email), // was 'auth.failed'
             ]);
-            // add a message, but how ??
-            $this->redirectIntended(route('login', absolute: false));
+            // add a flash-message
+            $this->redirectIntended(route('login', ['tenant' => $this->tenantIdOrSlug], absolute: false));
         }
 
         // check for tenantUser
@@ -54,7 +54,7 @@ new #[Layout('layouts.guest')] class extends Component
         }
         // end added for Saas
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('dashboard', ['tenant' => $this->tenantIdOrSlug], absolute: false), navigate: true);
     }
 }; ?>
 
