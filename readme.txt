@@ -1,17 +1,13 @@
 TODO:
-
 - edit profilephoto in frontend
+- tenantAdmin: edit tenant itself
 - apply to specific Saas-registration (with or without approval)
-- tenantname sluggable
-
 - invite a new user for registration
-
 - SaasAuth maken? Sla ik de Tenant op in de sessie? Ja! https://laracasts.com/discuss/channels/laravel/add-cutom-function-to-auth-facade
 - Switchen naar een ander User maken
 
-- Superadmin: tenant->users active and admin editable maken
-
 DONE
+- tenantname sluggable
 - show tenant-logo in the header
 - Combine all users-stuff of Filament into a Base-class
 - Admin en Superadmin links under 'Lambert'/Profile
