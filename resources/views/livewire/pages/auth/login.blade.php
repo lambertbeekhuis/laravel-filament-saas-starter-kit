@@ -2,6 +2,7 @@
 
 use App\Livewire\Forms\LoginForm;
 use App\Models\Tenant;
+use App\Events\LoginEvent;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
@@ -30,6 +31,9 @@ new #[Layout('layouts.guest')] class extends Component
 
         // added
         $user = auth()->user();
+
+        event(new LoginEvent($user));
+
         // check for active user
         if (!$user->is_active) {
             auth()->logout();
