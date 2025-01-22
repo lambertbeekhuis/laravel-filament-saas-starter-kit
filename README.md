@@ -1,23 +1,21 @@
 ## About Laravel-Filament-Saas-Starter-Kit
 
-This a Starter Kit for building your next Saas-application. It saves you many hours for setting up the basics for your Saas:
+This Starter Kit is for building your next Saas-application using Laravel. It saves you many hours for setting up the basics for your Saas:
 
-1) Access control for your Saas-frontend
+1) Access control for your Saas-application (both public and authenticated)
 2) An Admin-panel for your saas-clients/tenants to manage their users and settings
-3) A SuperAdmin-panel for you to manage your tenants and users 
+3) A SuperAdmin-panel for you to manage your tenants and users
+4) Registration logic with options for new users
 
-For this Starter Kit, Laravel Breeze (version 11, with LiveWire) is expanded with 'Tenants' (database and model) and Filament for the Admin-panels.
+For this Starter Kit, the Laravel Breeze starter kit version 11 with LiveWire is expanded with 'Tenants' (database and model) and Filament for the Admin-panels.
 Users can be part of 1 or more Tenants. In the base setup, it assumes a single database for all tenants, with a 'tenant-column' for some tables to separate the data per tenant.
 
 After cloning and installing this Starter Kit, you can start directly with implementing your own business logic, without spending time on setting up the basic Saas-structure.
 
-An example of the application can be found at [https://starterkit.jovisst.nl](https://starterkit.jovisst.nl). 
-
-You can login as a SuperAdmin by starterkit@jovisst.nl with password 'password'. You can create your own Tenants and Users from there.
+An example of the application can be found at [https://starterkit.jovisst.nl](https://starterkit.jovisst.nl). (You can login as a SuperAdmin by starterkit@jovisst.nl with password 'password'. You can create your own Tenants and Users from there).
 
 The laravel-filament-saas-starter-kit includes the following features:
-- A Tenant can have multiple users
-- A user can have access to one or multiple Tenants
+- A Tenant can have multiple users, and a user can have access to one or multiple Tenants
 - AuthTenantMiddleware for securing application access for Tenant-users only
 - User-registration for the new users and new tenants (public or invite-only)
 - A user profile with basic information, including a profile picture (with Spatie Media Library)
@@ -66,4 +64,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
