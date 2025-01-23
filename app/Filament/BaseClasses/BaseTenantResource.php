@@ -18,6 +18,12 @@ class BaseTenantResource
         $isTenantAdmin = !$isSuperAdmin;
 
         return $form
+            ->columns([
+                'default' => 1,
+                'lg' => 2,
+                'xl' => 2,
+                '2xl' => 2,
+            ])
             ->schema([
                 TextInput::make('name')
                     ->required()
@@ -25,6 +31,7 @@ class BaseTenantResource
                 Placeholder::make('empty')
                     ->label(''),
                 Toggle::make('is_active')
+                    ->hidden($isTenantAdmin)
                     ->required(),
                 Select::make('registration_type')
                     ->required()
