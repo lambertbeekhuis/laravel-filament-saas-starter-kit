@@ -29,6 +29,7 @@ class BaseTenantResource
                     ->required()
                     ->maxLength(255),
                 Placeholder::make('empty')
+                    ->hidden($isTenantAdmin)
                     ->label(''),
                 Toggle::make('is_active')
                     ->hidden($isTenantAdmin)
