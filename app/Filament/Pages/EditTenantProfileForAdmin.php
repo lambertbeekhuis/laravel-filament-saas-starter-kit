@@ -16,6 +16,12 @@ class EditTenantProfileForAdmin extends EditTenantProfile
 
     public function form(Form $form): Form
     {
-        return BaseTenantResource::form($form, false);
+        return BaseTenantResource::form($form, false)
+            ->columns([
+                'default' => 1,
+                'lg' => 2,
+                'xl' => 2,
+                '2xl' => 2,
+            ]);
     }
 }
