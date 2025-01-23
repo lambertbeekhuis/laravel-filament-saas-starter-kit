@@ -2,19 +2,14 @@
 
 namespace App\Filament\Superadmin\Resources;
 
+use App\Filament\BaseClasses\BaseTenantResource;
 use App\Filament\Superadmin\Resources\TenantResource\Pages;
 use App\Filament\Superadmin\Resources\TenantResource\RelationManagers;
 use App\Models\Tenant;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TenantResource extends Resource
 {
@@ -24,34 +19,7 @@ class TenantResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Placeholder::make('empty')
-                    ->label(''),
-                Toggle::make('is_active')
-                    ->required(),
-                Select::make('registration_type')
-                    ->required()
-                    ->options(Tenant::getRegistrationTypes()),
-                TextInput::make('address')
-                    ->maxLength(255)
-                    ->default(null),
-                TextInput::make('zip')
-                    ->maxLength(255)
-                    ->default(null),
-                TextInput::make('city')
-                    ->maxLength(255)
-                    ->default(null),
-                TextInput::make('country')
-                    ->maxLength(255)
-                    ->default(null),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
-                    ->collection('logo')
-                    ->image(),
-            ]);
+        return BaseTenantResource::form($form, true);
     }
 
     public static function table(Table $table): Table

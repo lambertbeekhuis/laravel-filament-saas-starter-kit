@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Models\Tenant;
+use App\Filament\Pages\EditTenantProfileForAdmin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -28,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->tenant(Tenant::class)
+            ->tenantProfile(EditTenantProfileForAdmin::class)
             ->loginRouteSlug('login') // disable the fileament login page
             ->colors([
                 'primary' => Color::Amber,
