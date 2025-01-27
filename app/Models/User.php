@@ -20,11 +20,12 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Image\Enums\Fit;
+use Spatie\Permission\Traits\HasRoles;
 
 
 class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia, MustVerifyEmail
 {
-    use HasFactory, Notifiable, interactsWithMedia;
+    use HasFactory, Notifiable, interactsWithMedia, HasRoles;
 
     /**
      * The attributes that are mass assignable.
