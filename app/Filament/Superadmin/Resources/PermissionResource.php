@@ -2,26 +2,39 @@
 
 namespace App\Filament\Superadmin\Resources;
 
-use App\Filament\BaseClasses\BaseTenantResource;
-use App\Filament\Superadmin\Resources\TenantResource\Pages;
-use App\Filament\Superadmin\Resources\TenantResource\RelationManagers;
-use App\Models\Tenant;
+use App\Filament\Superadmin\Resources\PermissionResource\Pages;
+use App\Filament\Superadmin\Resources\PermissionResource\RelationManagers;
+use App\Models\Permission;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TenantResource extends Resource
+class PermissionResource extends Resource
 {
-    protected static ?string $model = Tenant::class;
+    protected static ?string $model = Permission::class;
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 100;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
-        return BaseTenantResource::form($form, true);
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Select::make('guard_name')
+                    ->options([
+                        'web' => 'Web',
+                        // 'api' => 'API',
+                    ])
+                    ->required(),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -30,23 +43,7 @@ class TenantResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')
-                    ->collection('logo')
-                    ->conversion('thumb')
-                    ->label('Logo')
-                    // ->thumbnail()
-                    // ->maxWidth('50px')
-                    //->maxHeight('50px')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('zip')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('city')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('country')
+                Tables\Columns\TextColumn::make('guard_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -73,16 +70,16 @@ class TenantResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\UsersRelationManager::class,
+            //
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTenants::route('/'),
-            'create' => Pages\CreateTenant::route('/create'),
-            'edit' => Pages\EditTenant::route('/{record}/edit'),
+            'index' => Pages\ListPermissions::route('/'),
+            'create' => Pages\CreatePermission::route('/create'),
+            'edit' => Pages\EditPermission::route('/{record}/edit'),
         ];
     }
 }

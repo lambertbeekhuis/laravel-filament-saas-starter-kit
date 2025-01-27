@@ -2,12 +2,15 @@
 
 namespace App\Filament\BaseClasses;
 
+use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
+use Illuminate\Database\Eloquent\Model;
 
 class BaseUserResource
 {
@@ -37,6 +40,24 @@ class BaseUserResource
                     // ->rules(['required'])
                     ->image(),
                 DatePicker::make('date_of_birth'),
+
+                Select::make('roles')
+                    ->hidden($isSuperAdmin) // you do not know the Tenant
+                    ->relationship('roles', 'name')
+                    ->saveRelationshipsUsing(function (Model $record, $state) {
+                        $record->roles()->syncWithPivotValues($state, ['tenant_id' => Filament::getTenant()->id]);
+                    })
+                    ->preload()
+                    ->multiple(),
+                Select::make('permissions')
+                    ->hidden($isSuperAdmin) // you do not know the Tenant
+                    ->relationship('permissions', 'name')
+                    ->saveRelationshipsUsing(function (Model $record, $state) {
+                        $record->permissions()->syncWithPivotValues($state, ['tenant_id' => Filament::getTenant()->id]);
+                    })
+                    ->preload()
+                    ->multiple(),
+
                 DateTimePicker::make('email_verified_at')
                     ->hidden($isTenantAdmin),
                 Toggle::make('is_active')

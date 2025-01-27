@@ -29,6 +29,12 @@ class EditUser extends EditRecord
     }
 
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return $data;
+    }
+
+
     protected function mutateFormDataBeforeFill(array $data): array
     {
         $tenant = Filament::getTenant();
