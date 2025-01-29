@@ -28,4 +28,15 @@ Route::view('profile', 'profile')
 Route::get('/test/{type}', [TestController::class, 'test'])
     ->middleware(['auth', IsSuperAdminMiddleware::class]);
 
+Route::get('/testPermissions/{tenant?}', [TestController::class, 'testPermissions'])
+    ->middleware([
+        AuthTenantMiddleware::class,
+        IsSuperAdminMiddleware::class,
+        \Spatie\Permission\Middleware\RoleMiddleware::using('editor'),
+        \Spatie\Permission\Middleware\PermissionMiddleware::using('edit-customer'),
+        // or 'role:editor',
+        // or 'permission:edit-customer',
+    ]);
+
+
 require __DIR__.'/auth.php';

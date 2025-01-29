@@ -44,20 +44,19 @@ class BaseUserResource
                 Select::make('roles')
                     ->hidden($isSuperAdmin) // you do not know the Tenant
                     ->relationship('roles', 'name')
-                    ->saveRelationshipsUsing(function (Model $record, $state) {
-                        $record->roles()->syncWithPivotValues($state, ['tenant_id' => Filament::getTenant()->id]);
-                    })
                     ->preload()
                     ->multiple(),
+                /*
+                 Did work work with the following code:
                 Select::make('permissions')
                     ->hidden($isSuperAdmin) // you do not know the Tenant
                     ->relationship('permissions', 'name')
                     ->saveRelationshipsUsing(function (Model $record, $state) {
-                        $record->permissions()->syncWithPivotValues($state, ['tenant_id' => Filament::getTenant()->id]);
+                        // $record->permissions()->syncWithPivotValues($state, ['tenant_id' => Filament::getTenant()->id]);
                     })
                     ->preload()
                     ->multiple(),
-
+                */
                 DateTimePicker::make('email_verified_at')
                     ->hidden($isTenantAdmin),
                 Toggle::make('is_active')

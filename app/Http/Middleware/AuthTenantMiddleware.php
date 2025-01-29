@@ -36,6 +36,9 @@ class AuthTenantMiddleware
             session(['tenant' => $tenant->id]);
         }
 
+        // Added for Spatie Roles/Permissions https://spatie.be/docs/laravel-permission/v6/basic-usage/teams-permissions
+        setPermissionsTeamId($tenant->id);
+
         // inject into request
         $request->tenant = $tenant;
 

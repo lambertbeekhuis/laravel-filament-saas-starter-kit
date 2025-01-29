@@ -14,6 +14,18 @@ use App\Notifications\SentInvitationToUserNotification;
 class TestController extends Controller
 {
 
+    /**
+     * Test route for Spatie Permissions
+     */
+    public function testPermissions(Request $request)
+    {
+        $user = Auth::user();
+
+        $tenant = $request->tenant;
+
+        return view('testView', ['result' => ['tenant' => $tenant]]);
+    }
+
 
     /**
      * /test/{type}
@@ -22,13 +34,20 @@ class TestController extends Controller
     {
         $user = Auth::user();
         if (!$user->isSuperAdmin()) {
-            return response()->json([
-                'type' => $type,
-                'message' => 'You are not super admin',
-            ]);
+            return view('testView', ['result' => 'No permission']);
         }
 
         switch ($type) {
+            case 'roles':
+                setPermissionsTeamId(1); // is needed for a non-tenant route
+                $roles = $user->roles;
+                $role = $roles->first();
+
+                $permissions = $user->permissions;
+                $permission = $permissions->first();
+
+                return view('testView', ['result' => ['role' => $role, 'permission' => $permission]]);
+                break;
             case 'lastlogin':
                 $tenant = $user->tenantsLastLogin()->first();
                 $tenant_id = $tenant->tenant_user->tenant_id;

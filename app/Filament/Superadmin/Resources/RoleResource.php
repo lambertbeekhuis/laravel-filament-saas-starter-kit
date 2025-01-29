@@ -35,17 +35,17 @@ class RoleResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('guard_name')
-                    ->options([
-                        'web' => 'Web',
-                        // 'api' => 'API',
-                    ])
-                    ->required(),
                 Forms\Components\Select::make('permissions')
                     ->relationship('permissions', 'name')
                     ->preload()
                     ->multiple()
                     ->multiple(),
+                Forms\Components\Select::make('guard_name')
+                    ->options([
+                        'web' => 'web',
+                        // 'api' => 'API',
+                    ])
+                    ->required(),
             ]);
     }
 
@@ -55,6 +55,16 @@ class RoleResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('permissions')
+                    ->label('Related Permissions')
+                    ->html()
+                    ->getStateUsing(function (Model $record) {
+                        $html = '';
+                        foreach ($record->permissions as $permission) {
+                            $html .= sprintf('<div class="badge badge-primary">%s</div>', $permission->name);
+                        }
+                        return $html;
+                    }),
                 Tables\Columns\TextColumn::make('guard_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

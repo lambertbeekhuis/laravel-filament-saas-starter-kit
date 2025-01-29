@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\SetPermissionTeamIdMiddleware;
 use App\Models\Tenant;
 use App\Filament\Pages\EditTenantProfileForAdmin;
 use Filament\Http\Middleware\Authenticate;
@@ -66,6 +67,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                SetPermissionTeamIdMiddleware::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

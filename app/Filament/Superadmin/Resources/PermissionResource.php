@@ -30,7 +30,7 @@ class PermissionResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('guard_name')
                     ->options([
-                        'web' => 'Web',
+                        'web' => 'web',
                         // 'api' => 'API',
                     ])
                     ->required(),
