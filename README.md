@@ -39,12 +39,12 @@ The Laravel-Filament-Saas-Starter-Kit is based upon Laravel Breeze with the foll
 - Run `npm install`
 - Run `cp .env.example .env` and fill in your application details 
 - Run `npm run dev`
-- Run `php artisan migrate`
+- Run `php artisan migrate --seed`
 - Run `php artisan serve`
 - Make your first (superAdmin) user by running `php artisan app:make-user your@mail yourName yourPassword yourTenantName --tenantAdmin --superAdmin`
 - Open your browser and go to `http://127.0.0.1:8000`
-- Add your own remote repository and push it to your own git remote
-- Optionally, remove the starter kit remote (or leave it, to fetch updates)
+- Add your own remote repository and push it to your git remote
+- Optionally, remove the starter-kit remote (or leave it, to fetch updates)
 - Start building your own Saas-application
 
 ## Contributing

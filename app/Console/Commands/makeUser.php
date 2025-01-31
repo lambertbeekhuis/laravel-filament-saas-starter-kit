@@ -49,7 +49,7 @@ class makeUser extends Command implements PromptsForMissingInput
             ]);
             echo sprintf("User %s created\n", $email);
         } else {
-            echo sprintf("User %s exists\n", $email);
+            echo sprintf("User %s already exists\n", $email);
         }
 
         $tenant = Tenant::whereRaw('UPPER(name) LIKE ?', ['%' . strtoupper($tenantName) . '%'])->first();
@@ -60,7 +60,7 @@ class makeUser extends Command implements PromptsForMissingInput
             ]);
             echo sprintf(   "Tenant %s created\n", $tenantName);
         } else {
-            echo sprintf("Tenant %s exists\n", $tenantName);
+            echo sprintf("Tenant %s already exists\n", $tenantName);
         }
 
         $tenantUser = TenantUser::findOneForUserAndTenant($user->id, $tenant->id);
@@ -73,9 +73,16 @@ class makeUser extends Command implements PromptsForMissingInput
             ]);
             echo "TenantUser created\n";
         } else {
-            echo "TenantUser exists\n";
+            echo "TenantUser already exists\n";
         }
 
+        if ($isTenantAdmin) {
+            setPermissionsTeamId($tenant->id);
+            if (!$user->hasRole('admin')) {
+                $user->assignRole('admin');
+                echo "admin-role added to User\n";
+            }
+        }
 
     }
 }
