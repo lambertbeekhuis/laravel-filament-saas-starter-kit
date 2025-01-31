@@ -1,6 +1,9 @@
 TODO:
-- edit profilephoto in frontend
-- Permission and roles
+- edit profile-photo in frontend
+- Permission and roles with Spatie https://spatie.be/docs/laravel-permission/v6/introduction
+    - DONE add migration tenant foreign key
+    - use seeds for 'admin'
+    - TenantAdmin via Roles/Permissions
 - apply to specific Saas-registration (with or without approval)
 - invite a new user for registration
 - SaasAuth maken? Sla ik de Tenant op in de sessie? Ja! https://laracasts.com/discuss/channels/laravel/add-cutom-function-to-auth-facade
@@ -8,7 +11,7 @@ TODO:
 
 DONE
 - tenantAdmin: edit tenant itself
-- tenantname sluggable
+- tenant name sluggable
 - show tenant-logo in the header
 - Combine all users-stuff of Filament into a Base-class
 - Admin en Superadmin links under 'Lambert'/Profile
