@@ -57,15 +57,18 @@ class BaseUserResource
                     ->preload()
                     ->multiple(),
                 */
+
                 DateTimePicker::make('email_verified_at')
                     ->hidden($isTenantAdmin),
                 Toggle::make('is_active')
+                    ->hidden($isTenantAdmin)
                     ->required(),
                 Toggle::make('is_super_admin')
                     ->hidden($isTenantAdmin)
                     ->required(),
+
                 Toggle::make('is_active_on_tenant')
-                    ->label('Access to Tenant')
+                    ->label('Allow access')
                     ->hiddenOn('create')
                     ->hidden($isSuperAdmin),
                 Toggle::make('is_admin_on_tenant')
@@ -73,7 +76,7 @@ class BaseUserResource
                     ->hiddenOn('create')
                     ->hidden($isSuperAdmin),
                 Toggle::make('sent_invitation')
-                    ->label('Send invitation email')
+                    ->label('(Re)Send invitation email')
                     // might be made hidden of already logged in once
                     ->default(false)
                     ->hidden($isSuperAdmin),
