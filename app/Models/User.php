@@ -73,7 +73,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     public function teams(): BelongsToMany
     {
         return $this->tenants();
-
     }
 
     /**
@@ -98,16 +97,8 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     {
         switch ($panel->getId()) {
             case 'admin':
-                if ($tenant_id = request()->route('tenant')) {
-                    $tenantUser = TenantUser::query()
-                        ->where('user_id', $this->id)
-                        ->where('tenant_id', $tenant_id)
-                        ->where('is_active_on_tenant', true)
-                        ->where('is_admin_on_tenant', true)
-                        ->first();
-                    return (boolean) $tenantUser;
-                }
-                return true; // without tenant specified, you have access to /admin, which will be redirect to something with tenant
+                return true; // access control is handled by the middleware in AdminPanelProvider
+                             // without tenant specified, you have access to /admin, which will be redirect to something with tenant
             case 'superadmin':
                 return $this->isSuperAdmin();
         }
