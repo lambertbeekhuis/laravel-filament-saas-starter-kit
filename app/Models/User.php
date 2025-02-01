@@ -126,13 +126,13 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     }
 
     /**
-     * is_active and is_admin are pivot columns, accessed by tenant_user->is_active_on_tenant and tenant_user->is_admin_on_tenant
+     * is_active and is_admin are pivot columns, accessed by tenant_user->is_active_on_tenant
      */
     public function tenants(): BelongsToMany
     {
         return $this->belongsToMany(Tenant::class, 'tenant_users')
             // ->using(TenantUser::class)
-            ->withPivot('is_active_on_tenant', 'is_admin_on_tenant', 'last_login_at', 'created_at')
+            ->withPivot('is_active_on_tenant', 'last_login_at', 'created_at')
             ->as('tenant_user');
     }
 
@@ -203,7 +203,6 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->where('tenant_users.is_active_on_tenant', true)
             ->where('users.is_active', true)
             ->addSelect('users.*')
-            ->addSelect('tenant_users.is_admin_on_tenant')
             ->addSelect('tenant_users.last_login_at')
             ->get();
     }

@@ -63,10 +63,6 @@ class UserResource extends Resource
                     ->label('Active')
                     ->boolean(),
 
-                Tables\Columns\IconColumn::make('tenant_user_pivot.is_admin_on_tenant')
-                    ->label('Admin')
-                    ->boolean(),
-
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('profile_photo')
                     ->collection('profile')
                     ->conversion('thumb')

@@ -83,9 +83,9 @@ class TestController extends Controller
                 $tenantUserData = $tenantFirst->tenant_user;
 
                 $tenantUserIsActive = $tenantUserData->is_active_on_tenant;
-                $tenantUserIsAdmin = $tenantUserData->is_admin_on_tenant;
 
-                dd($tenants, $tenantUserData, $tenantUserIsAdmin, $tenantUserIsActive);
+
+                dd($tenants, $tenantUserData, $tenantUserIsActive);
 
 
 

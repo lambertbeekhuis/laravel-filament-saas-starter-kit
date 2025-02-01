@@ -69,7 +69,6 @@ class makeUser extends Command implements PromptsForMissingInput
                 'user_id' => $user->id,
                 'tenant_id' => $tenant->id,
                 'is_active_on_tenant' => true,
-                'is_admin_on_tenant' => $isTenantAdmin,
             ]);
             echo "TenantUser created\n";
         } else {

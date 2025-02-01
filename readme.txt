@@ -18,7 +18,7 @@ DONE
 - php artisan command for making a new User
 - make a component met all users
 - Superadmin: Add Users (basically to search!)
-- Admin: is_admin_on_tenant and is_active_on_tenant toevoegen
+- Admin: access based on Roles
 - tenantUser: is_admin => is_tenant_admin
 - tenantUser: is_active => is_tenant_active
 - Superadmin: tenant edit users: doe iets met wel/niet email sturen

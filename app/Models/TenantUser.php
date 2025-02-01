@@ -17,7 +17,6 @@ class TenantUser extends Model
         'user_id',
         'last_login_at',
         'is_active_on_tenant',
-        'is_admin_on_tenant',
     ];
 
     public function tenant(): BelongsTo

@@ -42,7 +42,6 @@ class EditUser extends EditRecord
 
         $tenantUser = TenantUser::findOneForUserAndTenant($this->record->id, $tenant->id);
         $data['is_active_on_tenant'] = $tenantUser->is_active_on_tenant;
-        $data['is_admin_on_tenant'] = $tenantUser->is_admin_on_tenant;
         return $data;
     }
 
@@ -55,7 +54,6 @@ class EditUser extends EditRecord
         $tenantUser = TenantUser::findOneForUserAndTenant($this->record->id, $tenant->id);
         $tenantUser->update([
             'is_active_on_tenant' => $data['is_active_on_tenant'],
-            'is_admin_on_tenant' => $data['is_admin_on_tenant'],
         ]);
 
         if ($data['sent_invitation'] ?? false) {

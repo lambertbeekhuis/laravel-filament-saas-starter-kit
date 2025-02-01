@@ -37,19 +37,10 @@ class Tenant extends Model implements HasMedia
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'tenant_users')
-            ->withPivot('is_active_on_tenant', 'is_admin_on_tenant', 'last_login_at', 'created_at')
+            ->withPivot('is_active_on_tenant', 'last_login_at', 'created_at')
             ->as('tenant_user');
     }
 
-
-    /**
-     * Utility method for when $user->tenants with pivot-data is used: to get the pivot data for is_admin_on_tenant
-     * E.g. auth()->tenant()->relatedUserIsTenantAdmin()
-     */
-    public function relatedUserIsTenantAdmin(): bool
-    {
-        return (bool) $this->tenant_user?->is_admin_on_tenant;
-    }
 
     public function tenantUsers(): HasMany
     {

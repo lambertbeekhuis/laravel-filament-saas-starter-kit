@@ -85,9 +85,6 @@ class UsersRelationManager extends RelationManager
                 Tables\Columns\IconColumn::make('tenant_user.is_active_on_tenant')
                     ->label('Active on tenant')
                     ->boolean(),
-                Tables\Columns\IconColumn::make('tenant_user.is_admin_on_tenant')
-                    ->label('tenantAdmin')
-                    ->boolean(),
                 Tables\Columns\TextColumn::make('tenant_user.last_login_at')
                     ->label('Last login'),
 

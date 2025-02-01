@@ -32,7 +32,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->dateTime('last_login_at')->nullable();
             $table->boolean('is_active_on_tenant')->default(true);
-            $table->boolean('is_admin_on_tenant')->default(false);
             $table->timestamps();
             $table->unique(['tenant_id', 'user_id']);
         });

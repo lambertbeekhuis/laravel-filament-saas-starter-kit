@@ -71,10 +71,6 @@ class BaseUserResource
                     ->label('Allow access')
                     ->hiddenOn('create')
                     ->hidden($isSuperAdmin),
-                Toggle::make('is_admin_on_tenant')
-                    ->label('TenantAdmin')
-                    ->hiddenOn('create')
-                    ->hidden($isSuperAdmin),
                 Toggle::make('sent_invitation')
                     ->label('(Re)Send invitation email')
                     // might be made hidden of already logged in once
