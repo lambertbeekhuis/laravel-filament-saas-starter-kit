@@ -64,7 +64,7 @@ new class extends Component
 
 
                         @can('admin', 'web')
-                            <x-dropdown-link :href="route('filament.admin.tenant')">
+                            <x-dropdown-link :href="route('filament.admin.pages.dashboard', ['tenant' => session('tenant', 0)])">
                                 {{ __('To Admin') }}
                             </x-dropdown-link>
                         @endif
@@ -118,7 +118,7 @@ new class extends Component
                 </x-responsive-nav-link>
 
                 @can('admin', 'web')
-                    <x-responsive-nav-link :href="route('filament.admin.tenant')">
+                    <x-responsive-nav-link :href="route('filament.admin.pages.dashboard', ['tenant' => session('tenant', 0)])">
                         {{ __('To Admin') }}
                     </x-responsive-nav-link>
                 @endif

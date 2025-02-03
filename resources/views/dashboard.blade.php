@@ -38,7 +38,7 @@
 
                         <p class="mt-4">
                             @can('admin', 'web')
-                                <a href="{{route('filament.admin.tenant')}}" class="m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" target="_blank">
+                                <a href="{{route('filament.admin.pages.dashboard', ['tenant' => $tenant->id])}}" class="m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" target="_blank">
                                     {{ __('To TenantAdmin') }}
                                 </a>
                             @endif
