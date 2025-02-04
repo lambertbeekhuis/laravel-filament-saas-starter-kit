@@ -122,7 +122,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     public function getProfilePhotoUrl(string $conversionName = 'thumb', $orAvatar = false): ?string
     {
         $url = $this->getFirstMediaUrl('profile', $conversionName);
-        return $url ? $url : ($orAvatar ? 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))) . '?d=mp' : null);
+        return $url ? $url : ($orAvatar ? 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))): null);
     }
 
     /**

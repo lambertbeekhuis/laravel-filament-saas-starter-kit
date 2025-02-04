@@ -9,6 +9,7 @@ use Livewire\WithFileUploads;
 
 /**
  * https://livewire.laravel.com/docs/uploads
+ * Key for file-uploads https://www.youtube.com/watch?v=kfkKUuvF2Lc&list=PLaDrsvip-wJvbi8t1zq3mG16Wk8DTwuYT&index=4
  */
 new class extends Component {
 
@@ -36,7 +37,7 @@ new class extends Component {
         $this->phone = $user->phone;
         $this->email = $user->email;
 
-        $this->profile_photo_url = $user->getProfilePhotoUrl('preview');
+        $this->profile_photo_url = $user->getProfilePhotoUrl('preview', true);
     }
 
     /**
@@ -171,7 +172,11 @@ new class extends Component {
 
         <div>
             <x-input-label for="new_photo" value="Profile photo"/> {{-- Label for info file --}}
-            @if($profile_photo_url)
+            @if ($new_photo)
+                <div class="shrink-0 my-2">
+                    <img src="{{ $new_photo->temporaryUrl() }}" alt="Profile photo" class="w-36 h-50 rounded-full"/>
+                </div>
+            @else
                 <div class="shrink-0 my-2">
                     <img src="{{ $profile_photo_url }}" alt="Profile photo" class="w-36 h-50 rounded-full"/>
                 </div>
