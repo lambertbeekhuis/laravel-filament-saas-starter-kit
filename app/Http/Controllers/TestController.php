@@ -37,6 +37,9 @@ class TestController extends Controller
             return view('testView', ['result' => 'No permission']);
         }
 
+        $result = false;
+        $imageUrl = null;
+
         switch ($type) {
             case 'roles':
                 setPermissionsTeamId(1); // is needed for a non-tenant route
@@ -55,11 +58,24 @@ class TestController extends Controller
 
                 return view('welcome');
             case 'photo':
-                $user->addMediaFromUrl('https://www.gong-galaxy.com/cdn/shop/files/1500-T-24-KITE-RANGE-VERTIGO-9M-NAVY-GONGKITE-01_61d9a0e9-3a06-4176-b97b-657c968fa944.png')
+
+                $photos = $user->getMedia('profile');
+
+                $user->clearMediaCollection('profile');
+
+                $result = $user
+                    ->addMediaFromUrl('https://www.gong-galaxy.com/cdn/shop/files/1500-T-24-KITE-RANGE-VERTIGO-9M-NAVY-GONGKITE-01_61d9a0e9-3a06-4176-b97b-657c968fa944.png')
                     ->toMediaCollection('profile');
 
 
+                $photos = $user->getMedia('profile');
 
+                $result = $user->getProfilePhotoUrl('thumb', true);
+                $imageUrl = $user->getProfilePhotoUrl('thumb', true);
+
+                $test = 1;
+
+                break;
             case 'notification':
                 // sent email with (breeze) template https://laraveldaily.com/post/laravel-breeze-user-name-auth-email-templates
                 $user = User::find(1);
@@ -67,12 +83,10 @@ class TestController extends Controller
                 $user->notify(new SentInvitationToUserNotification($user, $tenant));
                 return view('welcome');
             case 'mail':
-                Mail::to($user->email)->send(new TestMail());
-                return view('welcome');
+                $result = Mail::to($user->email)->send(new TestMail());
+                break;
             case 'tenantUser':
-                $tenantUserLast = $user->tenantUsersLastLogin()->first();
-
-                return view('welcome');
+                $result = $user->tenantUsersLastLogin()->first();
                 break;
             case 'tenant':
                 $user = User::find(1);
@@ -93,11 +107,9 @@ class TestController extends Controller
 
 
                 break;
-            default:
-                $result = 'type not found';
         }
 
-        return view('welcome');
+        return view('testView', ['result' => $result, 'imageUrl' => $imageUrl]);
 
         return response()->json([
             'type' => $type,

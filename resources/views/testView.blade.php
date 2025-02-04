@@ -21,5 +21,10 @@
             @php(dump($result ?? 'no result'))
         </p>
     </div>
+    @if ($imageUrl)
+        <div>
+            <img src="{{ $imageUrl }}"/>
+        </div>
+    @endif
 </div>
 </body>

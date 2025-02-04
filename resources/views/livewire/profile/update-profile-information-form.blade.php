@@ -10,8 +10,8 @@ use Livewire\WithFileUploads;
 /**
  * https://livewire.laravel.com/docs/uploads
  */
-new class extends Component
-{
+new class extends Component {
+
     use WithFileUploads;
 
     public string $name = '';
@@ -19,7 +19,7 @@ new class extends Component
     public ?string $last_name = '';
     public string $email = '';
     public ?string $phone = '';
-    public ?string $photo = null; // new uploaded photo
+    public $new_photo; // new uploaded photo
     public ?string $profile_photo_url = ''; // existing profile photo
 
 
@@ -52,24 +52,20 @@ new class extends Component
             'last_name' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
             'phone' => ['nullable', 'string', 'phone', 'max:20'], // https://github.com/Propaganistas/Laravel-Phone
-            'photo' => ['nullable', 'image', 'max:3048'],
+            'new_photo' => ['nullable', 'image', 'max:3048'],
         ]);
 
         $user->fill($validated);
 
-        dd('here');
+        // dd($this->new_photo);
 
         // add profile photo
         $request = request();
 
-        if ($request->hasFile('photo')) {
-            dd($request->hasFile('photo'), $request->file('photo')?->isValid());
-        }
-
-        if ($request->hasFile('profile_photo') && $request->file('profile_photo')->isValid()) {
+        if ($this->new_photo) {
             $user->clearMediaCollection('profile');
-            $user->addMediaFromRequest('profile_photo')->toMediaCollection('profile');
-            dd('done');
+            $user->addMedia($this->new_photo->getRealPath())
+                ->toMediaCollection('profile');
         }
 
         if ($user->isDirty('email')) {
@@ -79,6 +75,11 @@ new class extends Component
         $user->save();
 
         $this->dispatch('profile-updated', name: $user->name);
+    }
+
+    public function updatedNewPhoto($photo): void
+    {
+        //$this->validate('new_photo', ['nullable', 'image', 'max:10']);
     }
 
     /**
@@ -113,34 +114,39 @@ new class extends Component
 
     <form wire:submit="updateProfileInformation" enctype="multipart/form-data" class="mt-6 space-y-6">
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+            <x-input-label for="name" :value="__('Name')"/>
+            <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required
+                          autofocus autocomplete="name"/>
+            <x-input-error class="mt-2" :messages="$errors->get('name')"/>
         </div>
 
         <div>
-            <x-input-label for="middle_name" :value="__('Middle name')" />
-            <x-text-input wire:model="middle_name" id="middle_name" name="middle_name" type="text" class="mt-1 block w-full" autocomplete="middle_name" />
-            <x-input-error class="mt-2" :messages="$errors->get('middle_name')" />
+            <x-input-label for="middle_name" :value="__('Middle name')"/>
+            <x-text-input wire:model="middle_name" id="middle_name" name="middle_name" type="text"
+                          class="mt-1 block w-full" autocomplete="middle_name"/>
+            <x-input-error class="mt-2" :messages="$errors->get('middle_name')"/>
         </div>
 
         <div>
-            <x-input-label for="last_name" :value="__('Family name')" />
-            <x-text-input wire:model="last_name" id="last_name" name="last_name" type="text" class="mt-1 block w-full" autocomplete="last_name" />
-            <x-input-error class="mt-2" :messages="$errors->get('last_name')" />
+            <x-input-label for="last_name" :value="__('Family name')"/>
+            <x-text-input wire:model="last_name" id="last_name" name="last_name" type="text" class="mt-1 block w-full"
+                          autocomplete="last_name"/>
+            <x-input-error class="mt-2" :messages="$errors->get('last_name')"/>
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <x-input-label for="email" :value="__('Email')"/>
+            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required
+                          autocomplete="username"/>
+            <x-input-error class="mt-2" :messages="$errors->get('email')"/>
 
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
                 <div>
                     <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
                         {{ __('Your email address is unverified.') }}
 
-                        <button wire:click.prevent="sendVerification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                        <button wire:click.prevent="sendVerification"
+                                class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                             {{ __('Click here to re-send the verification email.') }}
                         </button>
                     </p>
@@ -156,31 +162,32 @@ new class extends Component
         </div>
 
         <div>
-            <x-input-label for="phone" :value="__('Phone')" />
-            <x-text-input wire:model="phone" id="phone" name="phone" type="text" class="mt-1 block w-full" autocomplete="phone" />
-            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+            <x-input-label for="phone" :value="__('Mobile')"/>
+            <x-text-input wire:model="phone" id="phone" name="phone" type="text" class="mt-1 block w-full"
+                          autocomplete="phone"/>
+            <x-input-error class="mt-2" :messages="$errors->get('phone')"/>
         </div>
 
 
         <div>
-            <x-input-label for="photo" value="Profile photo" /> {{-- Label for info file --}}
+            <x-input-label for="new_photo" value="Profile photo"/> {{-- Label for info file --}}
             @if($profile_photo_url)
                 <div class="shrink-0 my-2">
-                    <img src="{{ $profile_photo_url }}" alt="Profile photo" class="w-36 h-50 rounded-full" />
+                    <img src="{{ $profile_photo_url }}" alt="Profile photo" class="w-36 h-50 rounded-full"/>
                 </div>
             @endif
             <label class="block mt-2">
                 <span class="sr-only">Choose photo</span> {{-- Screen reader text --}}
-                <input type="file" wire:model="photo" id="photo" name="photo" accept=".jpg,.jpeg," class="block w-full text-sm text-slate-500
+                <input type="file" wire:model="new_photo" id="new_photo" name="new_photo" accept=".jpg,.jpeg,.png" class="block w-full text-sm text-slate-500
                                     file:mr-4 file:py-2 file:px-4
                                     file:rounded-full file:border-0
                                     file:text-sm file:font-semibold
                                     file:bg-violet-50 file:text-violet-700
                                     hover:file:bg-violet-100
-                                " /> {{-- File input field --}}
+                                "/> {{-- File input field --}}
             </label>
 
-            <x-input-error class="mt-2" :messages="$errors->get('photo')" />
+            <x-input-error class="mt-2" :messages="$errors->get('new_photo')"/>
         </div>
 
 
