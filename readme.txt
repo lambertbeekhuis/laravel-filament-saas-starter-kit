@@ -1,15 +1,19 @@
 TODO:
-- edit profile-photo in frontend
-- Permission and roles with Spatie https://spatie.be/docs/laravel-permission/v6/introduction
-    - DONE add migration tenant foreign key
-    - use seeds for 'admin'
-    - TenantAdmin via Roles/Permissions
+- add extra fields to user with separate update-entity
+- show profile information in frontend
+
+
 - apply to specific Saas-registration (with or without approval)
 - invite a new user for registration
 - SaasAuth maken? Sla ik de Tenant op in de sessie? Ja! https://laracasts.com/discuss/channels/laravel/add-cutom-function-to-auth-facade
 - Switchen naar een ander User maken
 
 DONE
+- Permission and roles with Spatie https://spatie.be/docs/laravel-permission/v6/introduction
+    - add migration tenant foreign key
+    - use seeds for 'admin' (both permission and role)
+    - TenantAdmin via Roles/Permissions
+- edit profile-photo in frontend (used the excellent tutorial on https://www.youtube.com/watch?v=kfkKUuvF2Lc&list=PLaDrsvip-wJvbi8t1zq3mG16Wk8DTwuYT&index=4)
 - tenantAdmin: edit tenant itself
 - tenant name sluggable
 - show tenant-logo in the header
