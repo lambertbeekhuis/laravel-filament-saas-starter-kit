@@ -18,21 +18,20 @@ class AuthTenantMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // get tenant_id from request or from session
+        // get tenant_id_or_slug from request or else from session
         $tenant_id_session = session('tenant', null);
-        $tenant_id = $request->route('tenant', $tenant_id_session);
+        $tenant_id_or_slug = $request->route('tenant', $tenant_id_session);
 
         $user = $request->user();
 
         // get this tenant, or the last logged-in tenant (and cache it in user-object)
-        if (!$tenant = $user->authTenantForUser($tenant_id)) {
+        if (!$tenant = $user->authTenantForUser($tenant_id_or_slug)) {
             abort(403);
         }
 
         // if tenant_id is not in session, update session and set last login
         if (!$tenant_id_session) {
-            $tenant_id = $tenant->tenant_user->tenant_id;
-            TenantUser::updateLastLoginForUserAndTenant($user->id, $tenant_id);
+            TenantUser::updateLastLoginForUserAndTenant($user->id, $tenant->id);
             session(['tenant' => $tenant->id]);
         }
 

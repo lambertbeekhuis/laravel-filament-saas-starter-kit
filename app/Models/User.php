@@ -156,18 +156,22 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
      * To retrieve related tenant for logged-in user $this->tenantsLastLogin(session('tenant', null))->first();
      * Or shorter/better auth()->tenant();
      */
-    public function tenantsLastLogin(?int $tenant_id = null): BelongsToMany
+    public function tenantsLastLogin(int|string|null $tenant_id_or_slug = null): BelongsToMany
     {
         return $this->tenants()
             ->where('tenant_users.is_active_on_tenant', true)
             ->where('tenants.is_active', true)
-            ->when($tenant_id, function ($query, $tenant_id) {
-                $query->where('tenants.id', $tenant_id);
+            ->when($tenant_id_or_slug, function ($query, $tenant_id_or_slug) {
+                if (is_numeric($tenant_id_or_slug)) {
+                    $query->where('tenants.id', $tenant_id_or_slug);
+                } else {
+                    $query->where('tenants.slug', $tenant_id_or_slug);
+                }
             })
             ->orderBy('last_login_at', 'desc');
     }
 
-    public function tenantUsersLastLogin(?string $tenant_id_or_slug): HasMany
+    public function tenantUsersLastLogin(int|string|null $tenant_id_or_slug): HasMany
     {
         return $this->tenantUsers()
             ->join('tenants', 'tenant_users.tenant_id', '=', 'tenants.id')
@@ -186,10 +190,10 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     /**
      * Specific function for auth()->tenant() to retrieve the CACHED tenant for the (authenticated) user
      */
-    public function authTenantForUser($tenant): ?Tenant
+    public function authTenantForUser(int|string|null $tenant_id_or_slug): ?Tenant
     {
         if ($this->authTenant === false) {
-            $this->authTenant = $this->tenantsLastLogin($tenant)->first();
+            $this->authTenant = $this->tenantsLastLogin($tenant_id_or_slug)->first();
         }
         return $this->authTenant;
     }
