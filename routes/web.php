@@ -1,11 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AppController;
 use App\Http\Controllers\TestController;
 use App\Http\Middleware\AuthTenantMiddleware;
-use App\Http\Middleware\PublicTenantMiddleware;
 use App\Http\Middleware\IsSuperAdminMiddleware;
-use App\Http\Controllers\AppController;
+use App\Http\Middleware\PublicTenantMiddleware;
+use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
 
 Route::view('/', 'welcome')
     ->name('home_all');
@@ -28,15 +30,14 @@ Route::view('profile', 'profile')
 Route::get('/test/{type}', [TestController::class, 'test'])
     ->middleware(['auth', IsSuperAdminMiddleware::class]);
 
-Route::get('/testPermissions/{tenant?}', [TestController::class, 'testPermissions'])
-    ->middleware([
-        AuthTenantMiddleware::class,
-        IsSuperAdminMiddleware::class,
-        \Spatie\Permission\Middleware\RoleMiddleware::using('editor'),
-        \Spatie\Permission\Middleware\PermissionMiddleware::using('edit-customer'),
-        // or 'role:editor',
-        // or 'permission:edit-customer',
-    ]);
-
+if (config('features.permissions.enabled', true)) {
+    Route::get('/testPermissions/{tenant?}', [TestController::class, 'testPermissions'])
+        ->middleware([
+            AuthTenantMiddleware::class,
+            IsSuperAdminMiddleware::class,
+            RoleMiddleware::using('editor'),
+            PermissionMiddleware::using('edit-customer'),
+        ]);
+}
 
 require __DIR__.'/auth.php';

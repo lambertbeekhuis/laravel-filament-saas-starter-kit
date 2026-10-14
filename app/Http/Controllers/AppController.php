@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class AppController extends Controller
 {
-
     /**
      * Public home page for a Tenant
      */

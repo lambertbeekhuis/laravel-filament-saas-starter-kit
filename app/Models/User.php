@@ -3,29 +3,27 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasTenants;
-use App\Models\Tenant;
 use Filament\Panel;
-use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Collection;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
-
-class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasMedia, HasTenants, MustVerifyEmail
 {
-    use HasFactory, Notifiable, interactsWithMedia, HasRoles;
+    use HasFactory, HasRoles, InteractsWithMedia, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -42,7 +40,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         'is_active',
         'is_super_admin',
         'date_of_birth',
-        'phone'
+        'phone',
     ];
 
     /**
@@ -98,10 +96,11 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         switch ($panel->getId()) {
             case 'admin':
                 return true; // access control is handled by the middleware in AdminPanelProvider
-                             // without tenant specified, you have access to /admin, which will be redirect to something with tenant
+                // without tenant specified, you have access to /admin, which will be redirect to something with tenant
             case 'superadmin':
                 return $this->isSuperAdmin();
         }
+
         return false;
     }
 
@@ -122,7 +121,8 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
     public function getProfilePhotoUrl(string $conversionName = 'thumb', $orAvatar = false): ?string
     {
         $url = $this->getFirstMediaUrl('profile', $conversionName);
-        return $url ? $url : ($orAvatar ? 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email))): null);
+
+        return $url ? $url : ($orAvatar ? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email))) : null);
     }
 
     /**
@@ -145,12 +145,10 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         return $this->tenants->first()->tenant_user;
     }
 
-
     public function tenantUsers(): HasMany
     {
         return $this->hasMany(TenantUser::class);
     }
-
 
     /**
      * To retrieve related tenant for logged-in user $this->tenantsLastLogin(session('tenant', null))->first();
@@ -195,9 +193,9 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
         if ($this->authTenant === false) {
             $this->authTenant = $this->tenantsLastLogin($tenant_id_or_slug)->first();
         }
+
         return $this->authTenant;
     }
-
 
     public static function getUsersForTenant(int $tenant_id): Collection
     {
@@ -211,23 +209,18 @@ class User extends Authenticatable implements FilamentUser, HasTenants, HasMedia
             ->get();
     }
 
-
-
     public function getFullNameAttribute()
     {
-         return implode(' ', array_filter([$this->name, $this->middle_name, $this->last_name]));
+        return implode(' ', array_filter([$this->name, $this->middle_name, $this->last_name]));
     }
 
     public function getInitialsAttribute()
     {
-        return $this->last_name ? strtoupper($this->name[0] . $this->last_name[0]) : strtoupper($this->name[0]) . $this->name[1] ?? '';
+        return $this->last_name ? strtoupper($this->name[0].$this->last_name[0]) : strtoupper($this->name[0]).$this->name[1] ?? '';
     }
-
 
     public function isSuperAdmin(): bool
     {
         return (bool) $this->is_super_admin;
     }
-
-
 }

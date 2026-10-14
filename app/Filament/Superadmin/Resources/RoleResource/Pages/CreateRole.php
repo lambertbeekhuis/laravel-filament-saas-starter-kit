@@ -3,7 +3,6 @@
 namespace App\Filament\Superadmin\Resources\RoleResource\Pages;
 
 use App\Filament\Superadmin\Resources\RoleResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateRole extends CreateRecord

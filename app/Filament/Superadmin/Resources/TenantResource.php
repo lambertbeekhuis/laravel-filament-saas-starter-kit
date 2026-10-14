@@ -6,8 +6,8 @@ use App\Filament\BaseClasses\BaseTenantResource;
 use App\Filament\Superadmin\Resources\TenantResource\Pages;
 use App\Filament\Superadmin\Resources\TenantResource\RelationManagers;
 use App\Models\Tenant;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -17,11 +17,11 @@ class TenantResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return BaseTenantResource::form($form, true);
+        return BaseTenantResource::form($schema, true);
     }
 
     public static function table(Table $table): Table
@@ -38,7 +38,7 @@ class TenantResource extends Resource
                     ->label('Logo')
                     // ->thumbnail()
                     // ->maxWidth('50px')
-                    //->maxHeight('50px')
+                    // ->maxHeight('50px')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('address')
                     ->searchable(),
@@ -61,11 +61,11 @@ class TenantResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Filament\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Filament\Actions\BulkActionGroup::make([
+                    Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

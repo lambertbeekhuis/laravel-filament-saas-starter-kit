@@ -44,7 +44,6 @@ return [
             // ],
         ],
 
-
         'smtp' => [
             'transport' => 'smtp',
             'url' => env('MAIL_URL'),

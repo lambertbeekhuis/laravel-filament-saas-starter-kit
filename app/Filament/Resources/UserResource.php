@@ -4,27 +4,21 @@ namespace App\Filament\Resources;
 
 use App\Filament\BaseClasses\BaseUserResource;
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\TenantUser;
 use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Facades\Filament;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-s-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-s-users';
 
     protected static ?int $navigationSort = 10;
-
 
     public static function getEloquentQuery(): Builder
     {
@@ -35,9 +29,9 @@ class UserResource extends Resource
         return $query;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return BaseUserResource::form($form, false);
+        return BaseUserResource::form($schema, false);
     }
 
     public static function table(Table $table): Table
@@ -67,9 +61,9 @@ class UserResource extends Resource
                     ->collection('profile')
                     ->conversion('thumb')
                     ->label('Photo'),
-                    // ->thumbnail()
-                    // ->maxWidth('50px')
-                    //->maxHeight('50px')
+                // ->thumbnail()
+                // ->maxWidth('50px')
+                // ->maxHeight('50px')
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable()
@@ -95,11 +89,11 @@ class UserResource extends Resource
                 }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Filament\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Filament\Actions\BulkActionGroup::make([
+                    Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -3,9 +3,8 @@
 namespace App\Filament\Pages;
 
 use App\Filament\BaseClasses\BaseTenantResource;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Pages\Tenancy\EditTenantProfile;
+use Filament\Schemas\Schema;
 
 class EditTenantProfileForAdmin extends EditTenantProfile
 {
@@ -14,9 +13,9 @@ class EditTenantProfileForAdmin extends EditTenantProfile
         return 'My Company';
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return BaseTenantResource::form($form, false)
+        return BaseTenantResource::form($schema, false)
             ->columns([
                 'default' => 1,
                 'lg' => 2,

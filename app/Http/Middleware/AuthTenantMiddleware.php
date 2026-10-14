@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\TenantUser;
+use App\Support\Features;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,18 +26,19 @@ class AuthTenantMiddleware
         $user = $request->user();
 
         // get this tenant, or the last logged-in tenant (and cache it in user-object)
-        if (!$tenant = $user->authTenantForUser($tenant_id_or_slug)) {
+        if (! $tenant = $user->authTenantForUser($tenant_id_or_slug)) {
             abort(403);
         }
 
         // if tenant_id is not in session, update session and set last login
-        if (!$tenant_id_session) {
+        if (! $tenant_id_session) {
             TenantUser::updateLastLoginForUserAndTenant($user->id, $tenant->id);
             session(['tenant' => $tenant->id]);
         }
 
-        // Added for Spatie Roles/Permissions https://spatie.be/docs/laravel-permission/v6/basic-usage/teams-permissions
-        setPermissionsTeamId($tenant->id);
+        if (Features::permissionsEnabled()) {
+            setPermissionsTeamId($tenant->id);
+        }
 
         // inject into request
         $request->tenant = $tenant;

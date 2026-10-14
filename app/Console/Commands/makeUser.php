@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
 use App\Models\Tenant;
 use App\Models\TenantUser;
+use App\Models\User;
+use App\Support\Features;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Support\Facades\Hash;
@@ -39,7 +40,7 @@ class makeUser extends Command implements PromptsForMissingInput
         $isVerified = (bool) $this->option('verified') ?? false;
 
         $user = User::where('email', $email)->first();
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
@@ -52,19 +53,19 @@ class makeUser extends Command implements PromptsForMissingInput
             echo sprintf("User %s already exists\n", $email);
         }
 
-        $tenant = Tenant::whereRaw('UPPER(name) LIKE ?', ['%' . strtoupper($tenantName) . '%'])->first();
-        if (!$tenant) {
+        $tenant = Tenant::whereRaw('UPPER(name) LIKE ?', ['%'.strtoupper($tenantName).'%'])->first();
+        if (! $tenant) {
             $tenant = Tenant::create([
                 'name' => $tenantName,
                 'registration_type' => Tenant::REGISTRATION_TYPE_PUBLIC_DIRECT,
             ]);
-            echo sprintf(   "Tenant %s created\n", $tenantName);
+            echo sprintf("Tenant %s created\n", $tenantName);
         } else {
             echo sprintf("Tenant %s already exists\n", $tenantName);
         }
 
         $tenantUser = TenantUser::findOneForUserAndTenant($user->id, $tenant->id);
-        if (!$tenantUser) {
+        if (! $tenantUser) {
             $tenantUser = TenantUser::create([
                 'user_id' => $user->id,
                 'tenant_id' => $tenant->id,
@@ -75,9 +76,9 @@ class makeUser extends Command implements PromptsForMissingInput
             echo "TenantUser already exists\n";
         }
 
-        if ($isTenantAdmin) {
+        if ($isTenantAdmin && Features::permissionsEnabled()) {
             setPermissionsTeamId($tenant->id);
-            if (!$user->hasRole('admin')) {
+            if (! $user->hasRole('admin')) {
                 $user->assignRole('admin');
                 echo "admin-role added to User\n";
             }

@@ -6,7 +6,6 @@ use App\Models\Tenant;
 use App\Models\TenantUser;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -15,6 +14,7 @@ class SentRegisteredTenantUserNotification extends Notification
     use Queueable;
 
     public User $user;
+
     public Tenant $tenant;
 
     /**

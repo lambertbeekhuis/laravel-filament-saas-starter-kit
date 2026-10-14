@@ -4,8 +4,6 @@ namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
 use App\Mail\InviteUserToTenantMail;
-use App\Mail\TestMail;
-use App\Models\Tenant;
 use App\Models\TenantUser;
 use App\Notifications\SentInvitationToUserNotification;
 use Filament\Actions;
@@ -28,12 +26,10 @@ class EditUser extends EditRecord
         ];
     }
 
-
     protected function mutateFormDataBeforeSave(array $data): array
     {
         return $data;
     }
-
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
@@ -42,13 +38,13 @@ class EditUser extends EditRecord
 
         $tenantUser = TenantUser::findOneForUserAndTenant($this->record->id, $tenant->id);
         $data['is_active_on_tenant'] = $tenantUser->is_active_on_tenant;
+
         return $data;
     }
 
-
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        $record =  parent::handleRecordUpdate($record, $data);
+        $record = parent::handleRecordUpdate($record, $data);
 
         $tenant = Filament::getTenant();
         $tenantUser = TenantUser::findOneForUserAndTenant($this->record->id, $tenant->id);
@@ -94,5 +90,4 @@ class EditUser extends EditRecord
             ->send(new InviteUserToTenantMail($user, $tenant));
 
     }
-
 }

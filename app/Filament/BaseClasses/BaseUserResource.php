@@ -2,23 +2,24 @@
 
 namespace App\Filament\BaseClasses;
 
+use App\Support\Features;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseUserResource
 {
-    public static function form(Form $form, bool $isSuperAdmin): Form
+    public static function form(Schema $schema, bool $isSuperAdmin): Schema
     {
-        $isTenantAdmin = !$isSuperAdmin;
+        $isTenantAdmin = ! $isSuperAdmin;
 
-        return $form
+        return $schema
             ->schema([
                 TextInput::make('name')
                     ->required()
@@ -42,7 +43,7 @@ class BaseUserResource
                 DatePicker::make('date_of_birth'),
 
                 Select::make('roles')
-                    ->hidden($isSuperAdmin) // you do not know the Tenant
+                    ->hidden($isSuperAdmin || ! Features::permissionsEnabled())
                     ->relationship('roles', 'name')
                     ->preload()
                     ->multiple(),
@@ -78,5 +79,4 @@ class BaseUserResource
                     ->hidden($isSuperAdmin),
             ]);
     }
-
 }

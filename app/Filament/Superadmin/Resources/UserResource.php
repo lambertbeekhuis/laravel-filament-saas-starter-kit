@@ -4,15 +4,11 @@ namespace App\Filament\Superadmin\Resources;
 
 use App\Filament\BaseClasses\BaseUserResource;
 use App\Filament\Superadmin\Resources\UserResource\Pages;
-use App\Filament\Superadmin\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
 {
@@ -20,16 +16,16 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 20;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function canCreate(): bool
     {
         return false;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return BaseUserResource::form($form, true);
+        return BaseUserResource::form($schema, true);
     }
 
     public static function table(Table $table): Table
@@ -48,7 +44,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('tenant')
                     ->label('Tenants')
                     ->html()
-                    ->getStateUsing( function (User $record) {
+                    ->getStateUsing(function (User $record) {
                         $html = '';
                         foreach ($record->tenants as $tenant) {
                             $html .= sprintf('<div class="badge badge-primary"><a href="%s">%s</a?</div>',
@@ -56,6 +52,7 @@ class UserResource extends Resource
                                 $tenant->name
                             );
                         }
+
                         return $html;
                     }),
 
@@ -74,11 +71,11 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Filament\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Filament\Actions\BulkActionGroup::make([
+                    Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

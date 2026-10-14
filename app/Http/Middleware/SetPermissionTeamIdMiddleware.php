@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Features;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,11 +10,14 @@ use Symfony\Component\HttpFoundation\Response;
 class SetPermissionTeamIdMiddleware
 {
     /**
-     * Fetch the tenant_id from the request and set tenant/team_id for the Spatie Roles/Permissions
+     * Fetch the tenant_id from the request and set tenant/team_id for Spatie roles/permissions.
      */
     public function handle(Request $request, Closure $next): Response
     {
-        setPermissionsTeamId($request->tenant); // is the tenant-id from the route
+        if (Features::permissionsEnabled()) {
+            setPermissionsTeamId($request->tenant);
+        }
+
         return $next($request);
     }
 }

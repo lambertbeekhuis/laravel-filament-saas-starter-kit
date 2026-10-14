@@ -53,7 +53,7 @@ class SuperadminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                IsSuperAdminMiddleware::class
+                IsSuperAdminMiddleware::class,
             ]);
     }
 }

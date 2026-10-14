@@ -17,8 +17,8 @@ class PublicTenantMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$tenant = Tenant::findOneForSlugOrId($request->route('tenant'))) {
-            abort(404, 'Tenant not found ' . $request->route('tenant'));
+        if (! $tenant = Tenant::findOneForSlugOrId($request->route('tenant'))) {
+            abort(404, 'Tenant not found '.$request->route('tenant'));
         }
         $request->tenant = $tenant;
 

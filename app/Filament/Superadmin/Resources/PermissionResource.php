@@ -3,15 +3,13 @@
 namespace App\Filament\Superadmin\Resources;
 
 use App\Filament\Superadmin\Resources\PermissionResource\Pages;
-use App\Filament\Superadmin\Resources\PermissionResource\RelationManagers;
 use App\Models\Permission;
+use App\Support\Features;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PermissionResource extends Resource
 {
@@ -19,11 +17,16 @@ class PermissionResource extends Resource
 
     protected static ?int $navigationSort = 100;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function shouldRegisterNavigation(): bool
     {
-        return $form
+        return Features::permissionsEnabled();
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -58,11 +61,11 @@ class PermissionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Filament\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Filament\Actions\BulkActionGroup::make([
+                    Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

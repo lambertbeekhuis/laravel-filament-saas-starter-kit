@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Middleware\PublicTenantMiddleware;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
-use App\Http\Middleware\PublicTenantMiddleware;
 
 Volt::route('register/{tenant}/{token?}', 'pages.auth.register')
     ->name('register')

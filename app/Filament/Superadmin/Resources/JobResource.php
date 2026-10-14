@@ -3,11 +3,10 @@
 namespace App\Filament\Superadmin\Resources;
 
 use App\Filament\SuperAdmin\Resources\JobResource\Pages;
-use App\Filament\SuperAdmin\Resources\JobResource\RelationManagers;
 use App\Models\Job;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -16,13 +15,13 @@ class JobResource extends Resource
 {
     protected static ?string $model = Job::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 200;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\TextInput::make('queue')
                     ->required()
@@ -46,10 +45,10 @@ class JobResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime('Y-m-d H:i:s')
                     ->sortable(),
                 TextColumn::make('displayName')
@@ -64,6 +63,7 @@ class JobResource extends Resource
                         if (strlen($state) <= $column->getCharacterLimit()) {
                             return null;
                         }
+
                         // Only render the tooltip if the column content exceeds the length limit.
                         return $state;
                     })
@@ -83,18 +83,18 @@ class JobResource extends Resource
                     })
                     ->searchable(),
                 */
-                Tables\Columns\TextColumn::make('attempts')
+                TextColumn::make('attempts')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('reserved_at')
+                TextColumn::make('reserved_at')
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('available_at')
+                TextColumn::make('available_at')
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('queue')
+                TextColumn::make('queue')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -103,16 +103,15 @@ class JobResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Filament\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Filament\Actions\BulkActionGroup::make([
+                    Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultPaginationPageOption(50)
-            ->defaultSort('created_at', 'desc')
-            ;
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

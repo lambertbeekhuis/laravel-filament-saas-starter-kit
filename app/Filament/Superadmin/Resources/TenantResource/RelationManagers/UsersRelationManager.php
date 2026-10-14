@@ -5,23 +5,21 @@ namespace App\Filament\Superadmin\Resources\TenantResource\RelationManagers;
 use App\Models\Tenant;
 use App\Models\TenantUser;
 use App\Models\User;
+use App\Notifications\SentInvitationToUserNotification;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\SentInvitationToUserNotification;
 
 class UsersRelationManager extends RelationManager
 {
     protected static string $relationship = 'users';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\Hidden::make('tenant_id')
                     ->default($this->getOwnerRecord()->id), // used for sending email
@@ -79,9 +77,9 @@ class UsersRelationManager extends RelationManager
                     ->collection('profile')
                     ->conversion('thumb')
                     ->label('Photo'),
-                    // ->thumbnail()
-                    // ->maxWidth('50px')
-                    //->maxHeight('50px'),
+                // ->thumbnail()
+                // ->maxWidth('50px')
+                // ->maxHeight('50px'),
                 Tables\Columns\IconColumn::make('tenant_user.is_active_on_tenant')
                     ->label('Active on tenant')
                     ->boolean(),
@@ -93,7 +91,7 @@ class UsersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                Filament\Actions\CreateAction::make()
                     ->mutateFormDataUsing(function (array $data): array {
                         return $data;
                     })
@@ -104,11 +102,12 @@ class UsersRelationManager extends RelationManager
                         if ($data['sent_invitation'] ?? false) {
                             Notification::send($user, new SentInvitationToUserNotification($user, Tenant::find($data['tenant_id'])));
                         }
+
                         return $user;
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Filament\Actions\EditAction::make()
                     ->mutateRecordDataUsing(function (array $data): array {
                         return $data;
                     })
@@ -120,13 +119,14 @@ class UsersRelationManager extends RelationManager
                         if ($data['sent_invitation'] ?? false) {
                             Notification::send($record, new SentInvitationToUserNotification($record, Tenant::find($data['tenant_id'])));
                         }
+
                         return $record;
                     }),
-                // Tables\Actions\DeleteAction::make(), // hide delete, as this gives issues: either implement soft delete, or
+                // Filament\Actions\DeleteAction::make(), // hide delete, as this gives issues: either implement soft delete, or
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Filament\Actions\BulkActionGroup::make([
+                    Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

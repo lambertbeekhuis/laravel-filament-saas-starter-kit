@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TestMail;
 use App\Models\Tenant;
 use App\Models\TenantUser;
 use App\Models\User;
+use App\Notifications\SentInvitationToUserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\TestMail;
-use App\Notifications\SentInvitationToUserNotification;
 
 class TestController extends Controller
 {
-
     /**
      * Test route for Spatie Permissions
      */
@@ -26,14 +25,13 @@ class TestController extends Controller
         return view('testView', ['result' => ['tenant' => $tenant]]);
     }
 
-
     /**
      * /test/{type}
      */
     public function test(Request $request, $type)
     {
         $user = Auth::user();
-        if (!$user->isSuperAdmin()) {
+        if (! $user->isSuperAdmin()) {
             return view('testView', ['result' => 'No permission']);
         }
 
@@ -67,7 +65,6 @@ class TestController extends Controller
                     ->addMediaFromUrl('https://www.gong-galaxy.com/cdn/shop/files/1500-T-24-KITE-RANGE-VERTIGO-9M-NAVY-GONGKITE-01_61d9a0e9-3a06-4176-b97b-657c968fa944.png')
                     ->toMediaCollection('profile');
 
-
                 $photos = $user->getMedia('profile');
 
                 $result = $user->getProfilePhotoUrl('thumb', true);
@@ -81,30 +78,27 @@ class TestController extends Controller
                 $user = User::find(1);
                 $tenant = Tenant::find(1);
                 $user->notify(new SentInvitationToUserNotification($user, $tenant));
+
                 return view('welcome');
             case 'mail':
-                $result = Mail::to($user->email)->send(new TestMail());
+                $result = Mail::to($user->email)->send(new TestMail);
                 break;
             case 'tenantUser':
                 $result = $user->tenantUsersLastLogin()->first();
                 break;
             case 'tenant':
                 $user = User::find(1);
-                //$tenantUsers1 = $user->tenantUsers;
-                //$tenantUsers = TenantUser::all();
+                // $tenantUsers1 = $user->tenantUsers;
+                // $tenantUsers = TenantUser::all();
                 $tenants = $user->tenants;
                 $tenantFirst = $tenants->first();
                 $tenantUserData = $tenantFirst->tenant_user;
 
                 $tenantUserIsActive = $tenantUserData->is_active_on_tenant;
 
-
                 dd($tenants, $tenantUserData, $tenantUserIsActive);
 
-
-
                 $result = $user->tenants;
-
 
                 break;
         }

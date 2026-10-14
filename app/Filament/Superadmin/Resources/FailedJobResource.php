@@ -5,24 +5,22 @@ namespace App\Filament\Superadmin\Resources;
 use App\Filament\SuperAdmin\Resources\FailedJobResource\Pages;
 use App\Models\FailedJob;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class FailedJobResource extends Resource
 {
     protected static ?string $model = FailedJob::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 210;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\TextInput::make('uuid')
                     ->label('UUID')
@@ -79,19 +77,18 @@ class FailedJobResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Filament\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Filament\Actions\BulkActionGroup::make([
+                    Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                Filament\Actions\CreateAction::make(),
             ])
             ->defaultPaginationPageOption(50)
-            ->defaultSort('failed_at', 'desc')
-            ;
+            ->defaultSort('failed_at', 'desc');
     }
 
     public static function getRelations(): array

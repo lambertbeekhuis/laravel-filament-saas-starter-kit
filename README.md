@@ -1,68 +1,94 @@
-## About Laravel-Filament-Saas-Starter-Kit
+## About Laravel-Filament-Saas-Starter-Kit (Laravel 13)
 
-You can build your next Saas-application using this Starter Kit. It saves you many hours for setting up the basics for your Saas:
+You can build your next SaaS application using this starter kit. It saves many hours setting up the basics:
 
-1) Access control for your Saas-application, including Roles and Permissions (both public access and authenticated)
-2) An Admin-panel for your saas-tenants, to manage their users and settings
-3) A SuperAdmin-panel for you, to manage your tenants and users
-4) Registration logic with options for new users
+1. Access control for your SaaS application, including optional roles and permissions (public and authenticated)
+2. An admin panel for your SaaS tenants to manage users and settings
+3. A superadmin panel to manage tenants and users
+4. Registration logic with options for new users
 
-This Starter Kit is build upon the Laravel Breeze starter kit version 11 with LiveWire, and adds 'Tenants' (database and model) and Filament for the Admin-panels.
-In addition, users can be part of 1 or more Tenants. In the base setup, it assumes a single database for all tenants, with a 'tenant-column' for some tables to separate the data per tenant.
+This starter kit is based on **Laravel 13**, **Livewire / Volt** (Breeze-style auth UI), and **Filament 5** for admin panels. Users can belong to one or more tenants. The default setup uses a single database with a tenant column on relevant tables.
 
-After cloning and installing this Starter Kit, you can start directly with implementing your own business logic, without spending time on setting up the basic Saas-structure.
+After cloning and installing, you can focus on business logic instead of SaaS scaffolding.
 
-An example of the application can be found at [https://starterkit.jovisst.nl](https://starterkit.jovisst.nl). (You can login as a SuperAdmin by starterkit@jovisst.nl with password 'password'. You can create your own Tenants and Users from there).
+Demo (Laravel 11 version): [https://starterkit.jovisst.nl](https://starterkit.jovisst.nl)
 
-The laravel-filament-saas-starter-kit includes the following features:
-- A Tenant can have multiple users (of course), and, a user can have access to one or multiple Tenants
-- AuthTenantMiddleware for securing application access for Tenant-users only
-- Including Roles and Permissions (using Spatie Permission)
-- User-registration for the new users and new tenants (public or invite-only)
-- A user profile with basic information, including a profile picture (with Spatie Media Library)
-- A (tenant)Admin for your tenants (admins) to manage their users, settings etc
-- A SuperAdmin for you to manage your Tenants and Users (with access to /superadmin)
+### Features
 
-## Used components
-The Laravel-Filament-Saas-Starter-Kit is based upon Laravel Breeze with the following components (see also the composer.json for a complete list):
-- Laravel 11
-- Breeze (Volt Class API with AlpineJS)
-- Filament 3.0
-- [Spatie Media Library](https://spatie.be/docs/laravel-medialibrary/v11/introduction) (used for profile picture)
-- [Spatie Permission](https://spatie.be/docs/laravel-permission/v6/introduction) (used for roles and permissions)
-- Sentry-setup for error tracking
-- Mailgun-setup for sending emails
-- Laravel-debug bar for debugging
-- see composer.json for the complete list
+- Tenants with many users; users can access multiple tenants
+- `AuthTenantMiddleware` for tenant-scoped authenticated routes
+- Optional Spatie Permission (team = tenant) — toggle with `FEATURE_PERMISSIONS_ENABLED`
+- User registration for new users and tenants (public or invite-only)
+- Profile with Spatie Media Library (profile picture)
+- Tenant admin at `/admin/{tenant}`
+- Superadmin at `/superadmin`
 
-## Installation of development environment
-- Clone the repository
-- Run `composer install`
-- Run `npm install`
-- Run `cp .env.example .env` and fill in your application details 
-- Run `npm run dev`
-- Run `php artisan migrate --seed`
-- Run `php artisan serve`
-- Make your first (superAdmin) user by running `php artisan app:make-user your@mail yourName yourPassword yourTenantName --tenantAdmin --superAdmin`
-- Open your browser and go to `http://127.0.0.1:8000`
-- Create a new remote repository and push it to your git remote: this is your working repository
-- Optionally, remove the starter-kit remote (or leave it, to fetch updates)
-- Start building your own Saas-application
+### Stack
 
-## Contributing
-You can contribute to this project by forking the repository and making a pull request.
+- Laravel 13
+- Livewire 4 + Volt
+- Filament 5
+- Spatie Media Library (profile pictures)
+- Spatie Permission (optional, tenant-scoped)
+- Sentry (error tracking)
+- Mailgun (mail)
+- Laravel Debugbar (local debugging)
 
-## Code of Conduct
+See `composer.json` for the full dependency list.
 
-## Security Vulnerabilities
+### Installation
 
-If you discover a security vulnerability please send an e-mail to Lambert via [lambert@jovisst.nl](maillto:lambert@jovisst.nl). All security vulnerabilities will be promptly addressed.
+```sh
+composer install
+npm install
+cp .env.example .env   # fill in app, mail, Sentry, etc.
+npm run dev              # or npm run build
+php artisan migrate --seed
+php artisan serve
+php artisan app:make-user your@mail yourName yourPassword yourTenantName --tenantAdmin --superAdmin
+```
 
-## License
-Laravel-Filament-Saas-Starter-Kit code is released under the MIT license:
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+### Optional roles & permissions
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+Spatie Permission is **on by default**. Tenant-scoped roles use `tenant_id` as the permission “team”, and the tenant Filament panel requires the `admin` permission (see `AdminRolesAndPermissionsSeeder`).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+If you do not need fine-grained roles, or you want to avoid the extra queries Spatie runs on authenticated requests, turn permissions **off** at project level:
+
+```env
+FEATURE_PERMISSIONS_ENABLED=false
+```
+
+After changing this value, clear config cache in deployed environments:
+
+```sh
+php artisan config:clear
+```
+
+#### When permissions are off
+
+| Area | Behavior |
+|------|----------|
+| **Web routes** | `role`, `permission`, and `role_or_permission` middleware aliases are not registered. The `/testPermissions` demo route is not registered. |
+| **Tenant routes** | `AuthTenantMiddleware` still enforces tenant membership; it does **not** call `setPermissionsTeamId()`. |
+| **Filament tenant admin** | Any authenticated user who can access the panel for that tenant may use `/admin/{tenant}` (no `admin` permission check). |
+| **Filament superadmin** | Roles and Permissions resources are hidden from navigation (direct URLs should still be avoided in production if you rely on “off”). |
+| **User forms** | The roles multi-select is hidden in tenant user management. |
+| **Seeding** | `AdminRolesAndPermissionsSeeder` is skipped when you run `php artisan db:seed`. |
+| **`app:make-user`** | The `--tenantAdmin` flag does not assign the `admin` role (user and tenant are still created). |
+| **Database** | Permission migrations still run; tables stay in place so you can enable the feature later without new migrations. |
+
+Helper in code: `App\Support\Features::permissionsEnabled()` (reads `config/features.php`, backed by `FEATURE_PERMISSIONS_ENABLED`).
+
+#### Turning permissions back on
+
+1. Set `FEATURE_PERMISSIONS_ENABLED=true` in `.env` and run `php artisan config:clear`.
+2. Seed roles and permissions: `php artisan db:seed --class=AdminRolesAndPermissionsSeeder`.
+3. Assign the `admin` role per tenant for users who should manage Filament tenant admin, e.g. via `php artisan app:make-user ... --tenantAdmin` (with permissions enabled) or manually in the superadmin Roles UI.
+
+Use **permissions on** when you need tenant-specific roles (editor, billing, etc.) or must restrict who can open the tenant admin panel. Use **permissions off** for simpler SaaS setups where tenant membership alone is enough authorization.
+
+### License
+
+MIT — see the original starter kit license text in the Laravel 11 repository.

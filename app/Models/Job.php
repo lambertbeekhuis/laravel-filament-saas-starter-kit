@@ -43,16 +43,17 @@ class Job extends Model
 
     protected function convertPayload(): array
     {
-        if (!is_array($this->payloadArray)) {
+        if (! is_array($this->payloadArray)) {
             $this->payloadArray = json_decode($this->payload, true);
         }
+
         return $this->payloadArray;
     }
 
-    protected function getPayloadOfName($name )
+    protected function getPayloadOfName($name)
     {
         $this->convertPayload();
+
         return $this->payloadArray[$name] ?? null;
     }
-
 }

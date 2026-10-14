@@ -3,17 +3,15 @@
 namespace App\Filament\Superadmin\Resources;
 
 use App\Filament\Superadmin\Resources\RoleResource\Pages;
-use App\Filament\Superadmin\Resources\RoleResource\RelationManagers;
 use App\Models\Role;
+use App\Support\Features;
 use Filament\Facades\Filament;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RoleResource extends Resource
 {
@@ -21,11 +19,16 @@ class RoleResource extends Resource
 
     protected static ?int $navigationSort = 90;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function shouldRegisterNavigation(): bool
     {
-        return $form
+        return Features::permissionsEnabled();
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
             ->schema([
                 /*
                 Forms\Components\TextInput::make('tenant_id')
@@ -63,6 +66,7 @@ class RoleResource extends Resource
                         foreach ($record->permissions as $permission) {
                             $html .= sprintf('<div class="badge badge-primary">%s</div>', $permission->name);
                         }
+
                         return $html;
                     }),
                 Tables\Columns\TextColumn::make('guard_name')
@@ -80,11 +84,11 @@ class RoleResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Filament\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                Filament\Actions\BulkActionGroup::make([
+                    Filament\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

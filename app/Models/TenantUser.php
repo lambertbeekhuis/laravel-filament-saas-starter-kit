@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
+
 class TenantUser extends Model
 {
     use HasFactory;
@@ -42,7 +43,6 @@ class TenantUser extends Model
      */
     public static function updateLastLoginForUserAndTenant(int $userId, int $tenantId): void
     {
-        DB::update("UPDATE tenant_users SET last_login_at = NOW() WHERE user_id = ? AND tenant_id = ?", [$userId, $tenantId]);
+        DB::update('UPDATE tenant_users SET last_login_at = NOW() WHERE user_id = ? AND tenant_id = ?', [$userId, $tenantId]);
     }
-
 }

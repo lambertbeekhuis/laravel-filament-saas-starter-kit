@@ -4,7 +4,6 @@ namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
 use App\Notifications\SentInvitationToUserNotification;
-use Filament\Actions;
 use Filament\Facades\Filament;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +22,7 @@ class CreateUser extends CreateRecord
             $tenant = Filament::getTenant();
             Notification::send($record, new SentInvitationToUserNotification($record, $tenant));
         }
+
         return $record;
     }
-
 }

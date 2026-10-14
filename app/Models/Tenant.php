@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Tenant extends Model implements HasMedia
 {
@@ -19,8 +19,11 @@ class Tenant extends Model implements HasMedia
     protected $table = 'tenants';
 
     const REGISTRATION_TYPE_PUBLIC_DIRECT = 'public_direct';
+
     const REGISTRATION_TYPE_PUBLIC_APPROVE = 'public_approve';
+
     const REGISTRATION_TYPE_INVITE_PERSONAL = 'invite_personal';
+
     const REGISTRATION_TYPE_INVITE_SECRET_LINK = 'invite_secret_link';
 
     protected $fillable = [
@@ -40,7 +43,6 @@ class Tenant extends Model implements HasMedia
             ->withPivot('is_active_on_tenant', 'last_login_at', 'created_at')
             ->as('tenant_user');
     }
-
 
     public function tenantUsers(): HasMany
     {
@@ -65,8 +67,8 @@ class Tenant extends Model implements HasMedia
     {
         return [
             'slug' => [
-                'source' => 'name'
-            ]
+                'source' => 'name',
+            ],
         ];
     }
 
@@ -90,7 +92,7 @@ class Tenant extends Model implements HasMedia
     public function getLogoUrl(string $conversionName = 'thumb', $orAvatar = false): ?string
     {
         $url = $this->getFirstMediaUrl('logo', $conversionName);
-        return $url ? $url : ($orAvatar ? 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->name))) . '?d=mp' : null);
-    }
 
+        return $url ? $url : ($orAvatar ? 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->name))).'?d=mp' : null);
+    }
 }

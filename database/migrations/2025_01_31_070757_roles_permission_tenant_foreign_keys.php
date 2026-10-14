@@ -25,7 +25,6 @@ return new class extends Migration
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade')->onUpdate('restrict');
         });
 
-
     }
 
     /**
