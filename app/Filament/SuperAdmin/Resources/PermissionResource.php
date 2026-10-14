@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Superadmin\Resources;
+namespace App\Filament\SuperAdmin\Resources;
 
-use App\Filament\Superadmin\Resources\PermissionResource\Pages;
+use App\Filament\SuperAdmin\Resources\PermissionResource\Pages;
 use App\Models\Permission;
 use App\Support\Features;
 use Filament\Forms;

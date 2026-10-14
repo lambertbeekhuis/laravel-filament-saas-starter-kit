@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Superadmin\Resources;
+namespace App\Filament\SuperAdmin\Resources;
 
-use App\Filament\Superadmin\Resources\RoleResource\Pages;
+use App\Filament\SuperAdmin\Resources\RoleResource\Pages;
 use App\Models\Role;
 use App\Support\Features;
 use Filament\Facades\Filament;

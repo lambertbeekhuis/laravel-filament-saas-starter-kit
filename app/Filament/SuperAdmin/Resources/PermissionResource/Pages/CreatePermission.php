@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Superadmin\Resources\PermissionResource\Pages;
+namespace App\Filament\SuperAdmin\Resources\PermissionResource\Pages;
 
-use App\Filament\Superadmin\Resources\PermissionResource;
+use App\Filament\SuperAdmin\Resources\PermissionResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePermission extends CreateRecord

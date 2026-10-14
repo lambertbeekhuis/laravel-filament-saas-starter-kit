@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Superadmin\Resources;
+namespace App\Filament\SuperAdmin\Resources;
 
 use App\Filament\BaseClasses\BaseUserResource;
-use App\Filament\Superadmin\Resources\UserResource\Pages;
+use App\Filament\SuperAdmin\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

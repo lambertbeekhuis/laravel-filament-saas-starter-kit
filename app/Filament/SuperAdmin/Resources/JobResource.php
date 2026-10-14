@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Superadmin\Resources;
+namespace App\Filament\SuperAdmin\Resources;
 
 use App\Filament\SuperAdmin\Resources\JobResource\Pages;
 use App\Models\Job;

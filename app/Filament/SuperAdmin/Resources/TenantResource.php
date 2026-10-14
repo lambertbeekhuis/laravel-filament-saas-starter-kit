@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Superadmin\Resources;
+namespace App\Filament\SuperAdmin\Resources;
 
 use App\Filament\BaseClasses\BaseTenantResource;
-use App\Filament\Superadmin\Resources\TenantResource\Pages;
-use App\Filament\Superadmin\Resources\TenantResource\RelationManagers;
+use App\Filament\SuperAdmin\Resources\TenantResource\Pages;
+use App\Filament\SuperAdmin\Resources\TenantResource\RelationManagers;
 use App\Models\Tenant;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;

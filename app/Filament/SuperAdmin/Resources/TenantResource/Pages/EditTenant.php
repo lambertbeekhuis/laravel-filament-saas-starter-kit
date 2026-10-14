@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Superadmin\Resources\TenantResource\Pages;
+namespace App\Filament\SuperAdmin\Resources\TenantResource\Pages;
 
-use App\Filament\Superadmin\Resources\TenantResource;
+use App\Filament\SuperAdmin\Resources\TenantResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Superadmin\Resources\TenantResource\RelationManagers;
+namespace App\Filament\SuperAdmin\Resources\TenantResource\RelationManagers;
 
 use App\Models\Tenant;
 use App\Models\TenantUser;
