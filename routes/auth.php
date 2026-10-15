@@ -11,6 +11,9 @@ Volt::route('register/{tenant}/{token?}', 'pages.auth.register')
     ->middleware(PublicTenantMiddleware::class);
 
 Route::middleware('guest')->group(function () {
+    Volt::route('register-tenant', 'pages.auth.register-tenant')
+        ->name('register.tenant');
+
     Volt::route('login/{tenant?}', 'pages.auth.login')
         ->name('login');
 
