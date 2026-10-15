@@ -5,6 +5,9 @@ namespace App\Filament\SuperAdmin\Resources;
 use App\Filament\BaseClasses\BaseUserResource;
 use App\Filament\SuperAdmin\Resources\UserResource\Pages;
 use App\Models\User;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -47,7 +50,7 @@ class UserResource extends Resource
                     ->getStateUsing(function (User $record) {
                         $html = '';
                         foreach ($record->tenants as $tenant) {
-                            $html .= sprintf('<div class="badge badge-primary"><a href="%s">%s</a?</div>',
+                            $html .= sprintf('<div class="badge badge-primary"><a href="%s">%s</a></div>',
                                 route('filament.superadmin.resources.tenants.edit', ['record' => $tenant->id]),
                                 $tenant->name
                             );
@@ -71,11 +74,11 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Filament\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Filament\Actions\BulkActionGroup::make([
-                    Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

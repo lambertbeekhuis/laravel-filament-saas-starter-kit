@@ -6,6 +6,10 @@ use App\Models\Tenant;
 use App\Models\TenantUser;
 use App\Models\User;
 use App\Notifications\SentInvitationToUserNotification;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -91,7 +95,7 @@ class UsersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Filament\Actions\CreateAction::make()
+                CreateAction::make()
                     ->mutateFormDataUsing(function (array $data): array {
                         return $data;
                     })
@@ -107,7 +111,7 @@ class UsersRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Filament\Actions\EditAction::make()
+                EditAction::make()
                     ->mutateRecordDataUsing(function (array $data): array {
                         return $data;
                     })
@@ -125,8 +129,8 @@ class UsersRelationManager extends RelationManager
                 // Filament\Actions\DeleteAction::make(), // hide delete, as this gives issues: either implement soft delete, or
             ])
             ->bulkActions([
-                Filament\Actions\BulkActionGroup::make([
-                    Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -4,6 +4,10 @@ namespace App\Filament\SuperAdmin\Resources;
 
 use App\Filament\SuperAdmin\Resources\FailedJobResource\Pages;
 use App\Models\FailedJob;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -77,15 +81,15 @@ class FailedJobResource extends Resource
                 //
             ])
             ->actions([
-                Filament\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Filament\Actions\BulkActionGroup::make([
-                    Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateActions([
-                Filament\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
             ->defaultPaginationPageOption(50)
             ->defaultSort('failed_at', 'desc');

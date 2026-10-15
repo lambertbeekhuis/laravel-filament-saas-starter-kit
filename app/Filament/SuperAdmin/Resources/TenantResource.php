@@ -6,6 +6,9 @@ use App\Filament\BaseClasses\BaseTenantResource;
 use App\Filament\SuperAdmin\Resources\TenantResource\Pages;
 use App\Filament\SuperAdmin\Resources\TenantResource\RelationManagers;
 use App\Models\Tenant;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -61,11 +64,11 @@ class TenantResource extends Resource
                 //
             ])
             ->actions([
-                Filament\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Filament\Actions\BulkActionGroup::make([
-                    Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

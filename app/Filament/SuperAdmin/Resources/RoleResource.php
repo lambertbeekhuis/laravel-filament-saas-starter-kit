@@ -5,7 +5,9 @@ namespace App\Filament\SuperAdmin\Resources;
 use App\Filament\SuperAdmin\Resources\RoleResource\Pages;
 use App\Models\Role;
 use App\Support\Features;
-use Filament\Facades\Filament;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -84,11 +86,11 @@ class RoleResource extends Resource
                 //
             ])
             ->actions([
-                Filament\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Filament\Actions\BulkActionGroup::make([
-                    Filament\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
