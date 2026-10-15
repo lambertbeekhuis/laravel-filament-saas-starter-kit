@@ -5,12 +5,12 @@ use App\Http\Middleware\PublicTenantMiddleware;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
+// register for an existing tenant
 Volt::route('register/{tenant}/{token?}', 'pages.auth.register')
     ->name('register')
     ->middleware(PublicTenantMiddleware::class);
 
 Route::middleware('guest')->group(function () {
-
     Volt::route('login/{tenant?}', 'pages.auth.login')
         ->name('login');
 
