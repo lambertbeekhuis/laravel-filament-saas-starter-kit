@@ -113,7 +113,35 @@
 
                             </div>
 
+                            <!-- New user and tenant -->
+                            @if (Route::has('register.tenant'))
+                                <div
+                                    class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
+                                >
+                                    <div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
+                                        <svg class="size-5 sm:size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF2D20">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"/>
+                                        </svg>
+                                    </div>
 
+                                    <div class="pt-3 sm:pt-5 flex-1">
+                                        <h2 class="text-xl font-semibold text-black dark:text-white">{{ __('New Tenant with new User') }}</h2>
+
+                                        <p class="mt-4 text-sm/relaxed">
+                                            {{ __('Create a new User-account together with a new tenant/organization. You will become the first user and tenant admin.') }}
+                                        </p>
+
+                                        <a
+                                            href="{{ route('register.tenant') }}"
+                                            class="mt-6 inline-block rounded-md bg-[#FF2D20] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#e0281c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2D20] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900"
+                                        >
+                                            {{ __('Create new tenant with new user') }}
+                                        </a>
+                                    </div>
+
+                                    <svg class="size-6 shrink-0 self-center stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>
+                                </div>
+                            @endif
 
                             <!-- Communication -->
 
