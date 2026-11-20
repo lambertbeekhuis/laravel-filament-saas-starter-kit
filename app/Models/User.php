@@ -15,15 +15,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\Contracts\PasskeyUser;
+use Laravel\Fortify\PasskeyAuthenticatable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, HasMedia, HasTenants, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasMedia, HasTenants, MustVerifyEmail, PasskeyUser
 {
-    use HasFactory, HasRoles, InteractsWithMedia, Notifiable;
+    use HasFactory, HasRoles, InteractsWithMedia, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -50,6 +53,8 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasTenants
      */
     protected $hidden = [
         'password',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
         'remember_token',
     ];
 
@@ -65,6 +70,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasTenants
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'two_factor_confirmed_at' => 'datetime',
         ];
     }
 

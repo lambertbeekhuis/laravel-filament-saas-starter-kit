@@ -15,6 +15,17 @@
 
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="max-w-xl">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        {{ __('Passkeys, two-factor authentication, and password rules live on the security settings page (same as the Livewire starter kit).') }}
+                    </p>
+                    <a href="{{ route('profile.security') }}" class="text-indigo-600 dark:text-indigo-400 underline" wire:navigate>
+                        {{ __('Security settings') }}
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                <div class="max-w-xl">
                     <livewire:profile.update-password-form />
                 </div>
             </div>

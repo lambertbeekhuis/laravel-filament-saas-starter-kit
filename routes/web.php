@@ -26,6 +26,19 @@ Route::view('profile', 'profile')
     ->middleware(['auth', 'verified', AuthTenantMiddleware::class])
     ->name('profile');
 
+Route::middleware(['auth', 'verified', AuthTenantMiddleware::class])->group(function () {
+    Route::livewire('profile/security', 'pages::settings.security')
+        ->middleware(['password.confirm'])
+        ->name('profile.security');
+});
+
+Route::get('.well-known/passkey-endpoints', function () {
+    return response()->json([
+        'enroll' => route('profile.security'),
+        'manage' => route('profile.security'),
+    ]);
+})->name('well-known.passkeys');
+
 // make route to TestController
 Route::get('/test/{type}', [TestController::class, 'test'])
     ->middleware(['auth', IsSuperAdminMiddleware::class]);
