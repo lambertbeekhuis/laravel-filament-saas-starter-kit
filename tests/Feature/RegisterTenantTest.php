@@ -52,7 +52,7 @@ class RegisterTenantTest extends TestCase
             'is_active_on_tenant' => true,
         ]);
 
-        $component->assertRedirect(route('dashboard', ['tenant' => $tenant->id], absolute: false));
+        $component->assertRedirect(route('dashboard', ['tenant' => $tenant->slug], absolute: false));
 
         $this->assertAuthenticated();
 

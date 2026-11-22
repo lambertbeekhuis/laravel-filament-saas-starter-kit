@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -222,7 +223,16 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasTenants
 
     public function getInitialsAttribute()
     {
-        return $this->last_name ? strtoupper($this->name[0].$this->last_name[0]) : strtoupper($this->name[0]).$this->name[1] ?? '';
+        return $this->last_name ? strtoupper($this->name[0].$this->last_name[0]) : strtoupper($this->name[0]).($this->name[1] ?? '');
+    }
+
+    public function initials(): string
+    {
+        $initials = Str::initials($this->full_name ?: $this->name, true);
+
+        return Str::length($initials) > 1
+            ? Str::substr($initials, 0, 1).Str::substr($initials, -1)
+            : $initials;
     }
 
     public function isSuperAdmin(): bool

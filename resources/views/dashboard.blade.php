@@ -1,11 +1,8 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{$tenant->name}} {{ __('dashboard') }}
-        </h2>
-    </x-slot>
+<x-layouts::app :title="__('Dashboard')">
+    <div class="flex h-full w-full flex-1 flex-col gap-6 py-4">
+        <flux:heading size="xl">{{ $tenant->name }} {{ __('dashboard') }}</flux:heading>
 
-    <div class="py-12 flex flex-row w-full">
+        <div class="flex flex-row w-full gap-4">
 
         <div class="basis-2/3 sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -90,5 +87,6 @@
 
             </div>
         </div>
+        </div>
     </div>
-</x-app-layout>
+</x-layouts::app>

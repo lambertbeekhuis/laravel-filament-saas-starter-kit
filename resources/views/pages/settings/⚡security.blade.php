@@ -7,14 +7,13 @@ use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
-use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Laravel\Passkeys\Actions\DeletePasskey;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 
-new #[Layout('layouts.profile-settings')]
+new #[\Livewire\Attributes\Layout('layouts.app')]
 #[Title('Security settings')] class extends Component {
     use PasswordValidationRules;
 
@@ -173,7 +172,7 @@ new #[Layout('layouts.profile-settings')]
 
     <flux:heading level="2" class="sr-only">{{ __('Security settings') }}</flux:heading>
 
-    <x-settings-layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
+    <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Ensure your account is using a long, random password to stay secure')">
         <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
             <flux:input
                 wire:model="current_password"
@@ -308,7 +307,7 @@ new #[Layout('layouts.profile-settings')]
                 </div>
             </section>
         @endif
-    </x-settings-layout>
+    </x-pages::settings.layout>
 
     <flux:modal
         name="delete-passkey-modal"
