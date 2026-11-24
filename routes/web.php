@@ -22,22 +22,11 @@ Route::get('dashboard/{tenant?}', [AppController::class, 'dashboard'])
     ->middleware(['auth', 'verified', AuthTenantMiddleware::class])
     ->name('dashboard');
 
-Route::view('profile', 'profile')
+Route::redirect('profile', 'settings/profile')
     ->middleware(['auth', 'verified', AuthTenantMiddleware::class])
     ->name('profile');
 
-Route::middleware(['auth', 'verified', AuthTenantMiddleware::class])->group(function () {
-    Route::livewire('profile/security', 'pages::settings.security')
-        ->middleware(['password.confirm'])
-        ->name('profile.security');
-});
-
-Route::get('.well-known/passkey-endpoints', function () {
-    return response()->json([
-        'enroll' => route('profile.security'),
-        'manage' => route('profile.security'),
-    ]);
-})->name('well-known.passkeys');
+require __DIR__.'/settings.php';
 
 // make route to TestController
 Route::get('/test/{type}', [TestController::class, 'test'])

@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Starter kit</title>
+        <title>{{ config('app.name', 'Saas Starterkit') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -91,21 +91,39 @@
                                 <div class="pt-3 sm:pt-5">
                                     <h2 class="text-xl font-semibold text-black dark:text-white">Login @demo, and see the Admin's</h2>
 
-                                    <a href="{{ route('home_tenant', ['tenant' => $tenant->slug]) }}">
-                                    <p class="mt-4 text-sm/relaxed">
-                                        You can access the <span class="underline">publicly accessible homepage</span> of the tenant "{{$tenant->name}}".
-                                    </p>
-                                    </a>
+                                    @if ($tenant)
+                                        <a href="{{ route('home_tenant', ['tenant' => $tenant->slug]) }}">
+                                            <p class="mt-4 text-sm/relaxed">
+                                                You can access the <span class="underline">publicly accessible homepage</span> of the tenant "{{ $tenant->name }}".
+                                            </p>
+                                        </a>
 
-                                    <a href="{{ route('login') }}">
-                                    <p class="mt-4 text-sm/relaxed">
-                                        Or you can <span class="underline">login to the dashboard</span> with starterkit@jovisst.nl and password 'password'.
-                                    </p>
+                                        <a href="{{ route('login', ['tenant' => $tenant->slug]) }}">
+                                            <p class="mt-4 text-sm/relaxed">
+                                                Or you can <span class="underline">login to the dashboard</span> with starterkit@jovisst.nl and password 'password'.
+                                            </p>
 
-                                    <p class="mt-4 text-sm/relaxed">
-                                        This login will give you access to secured dashboard-page, and also to the TenantAdmin and SuperAdmin panels, as it is a SuperAdmin.
-                                    </p>
-                                    </a>
+                                            <p class="mt-4 text-sm/relaxed">
+                                                This login will give you access to secured dashboard-page, and also to the TenantAdmin and SuperAdmin panels, as it is a SuperAdmin.
+                                            </p>
+                                        </a>
+                                    @else
+                                        <p class="mt-4 text-sm/relaxed">
+                                            No demo tenant is in the database yet.
+                                            @if (Route::has('register.tenant'))
+                                                <a class="underline" href="{{ route('register.tenant') }}" wire:navigate>{{ __('Create an organization') }}</a>
+                                                to get started, then log in.
+                                            @else
+                                                Log in after seeding or creating a tenant.
+                                            @endif
+                                        </p>
+
+                                        <a href="{{ route('login') }}">
+                                            <p class="mt-4 text-sm/relaxed">
+                                                <span class="underline">Log in</span> if you already have an account.
+                                            </p>
+                                        </a>
+                                    @endif
 
                                 </div>
 

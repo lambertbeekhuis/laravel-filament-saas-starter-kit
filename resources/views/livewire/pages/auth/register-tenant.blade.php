@@ -8,7 +8,7 @@ use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
+new #[Layout('layouts.auth')] class extends Component
 {
     public string $tenant_name = '';
 
@@ -38,75 +38,78 @@ new #[Layout('layouts.guest')] class extends Component
 
         Auth::login($result['user']);
 
+        session(['tenant' => $result['tenant']->slug]);
+
         $this->redirect(
-            route('dashboard', ['tenant' => $result['tenant']->id], absolute: false),
+            route('dashboard', ['tenant' => $result['tenant']->slug], absolute: false),
             navigate: true,
         );
     }
 }; ?>
 
-<div>
-    <div class="mb-6">
-        <h1 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {{ __('Create your account') }}
-        </h1>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('Register as a new user and create a new tenant organization.') }}
-        </p>
-    </div>
+<div class="flex flex-col gap-6">
+        <x-auth-header
+            :title="__('Create an account')"
+            :description="__('Register and create a new organization (tenant).')"
+        />
 
-    <form wire:submit="registerTenant">
-        <div>
-            <x-input-label for="tenant_name" :value="__('Organization name')"/>
-            <x-text-input wire:model="tenant_name" id="tenant_name" class="block mt-1 w-full" type="text"
-                          name="tenant_name" required autofocus autocomplete="organization"/>
-            <x-input-error :messages="$errors->get('tenant_name')" class="mt-2"/>
-        </div>
+        <form wire:submit="registerTenant" class="flex flex-col gap-6">
+            <flux:input
+                wire:model="tenant_name"
+                :label="__('Organization name')"
+                type="text"
+                required
+                autofocus
+                autocomplete="organization"
+                :placeholder="__('Your company')"
+            />
 
-        <div class="mt-4">
-            <x-input-label for="name" :value="__('Your name')"/>
-            <x-text-input wire:model="name" id="name" class="block mt-1 w-full" type="text" name="name" required
-                          autocomplete="name"/>
-            <x-input-error :messages="$errors->get('name')" class="mt-2"/>
-        </div>
+            <flux:input
+                wire:model="name"
+                :label="__('Your name')"
+                type="text"
+                required
+                autocomplete="name"
+                :placeholder="__('Full name')"
+            />
 
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')"/>
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required
-                          autocomplete="username"/>
-            <x-input-error :messages="$errors->get('email')" class="mt-2"/>
-        </div>
+            <flux:input
+                wire:model="email"
+                :label="__('Email address')"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="email@example.com"
+            />
 
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')"/>
+            <flux:input
+                wire:model="password"
+                :label="__('Password')"
+                type="password"
+                required
+                autocomplete="new-password"
+                :placeholder="__('Password')"
+                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
+                viewable
+            />
 
-            <x-text-input wire:model="password" id="password" class="block mt-1 w-full"
-                          type="password"
-                          name="password"
-                          required autocomplete="new-password"/>
+            <flux:input
+                wire:model="password_confirmation"
+                :label="__('Confirm password')"
+                type="password"
+                required
+                autocomplete="new-password"
+                :placeholder="__('Confirm password')"
+                viewable
+            />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2"/>
-        </div>
-
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')"/>
-
-            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
-                          type="password"
-                          name="password_confirmation" required autocomplete="new-password"/>
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2"/>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-               href="{{ route('login') }}" wire:navigate>
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
+            <flux:button type="submit" variant="primary" class="w-full" data-test="register-tenant-button">
                 {{ __('Create account') }}
-            </x-primary-button>
+            </flux:button>
+        </form>
+
+        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
+            <span>{{ __('Already have an account?') }}</span>
+            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
         </div>
-    </form>
 </div>

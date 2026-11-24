@@ -8,7 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.guest')] class extends Component
+new #[Layout('layouts.layout_guest')] class extends Component
 {
     public LoginForm $form;
     public $tenantIdOrSlug;
